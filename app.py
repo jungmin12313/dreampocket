@@ -3,7 +3,8 @@ import json
 import re
 import random
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify
+from functools import wraps
+from flask import Flask, render_template, request, jsonify, Response
 from dotenv import load_dotenv
 from database import db
 from matching_engine import brain
@@ -12,6 +13,27 @@ from matching_engine import brain
 load_dotenv()
 
 app = Flask(__name__)
+
+# --------------------------------------------------------
+# Admin HTTP Basic Auth
+# --------------------------------------------------------
+def check_admin_auth(username, password):
+    correct_user = os.environ.get("ADMIN_USERNAME", "admin")
+    correct_pass = os.environ.get("ADMIN_PASSWORD", "changeme")
+    return username == correct_user and password == correct_pass
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_admin_auth(auth.username, auth.password):
+            return Response(
+                '접근 권한이 없습니다. 관리자 계정으로 로그인하세요.',
+                401,
+                {'WWW-Authenticate': 'Basic realm="DreamPocket Admin"'}
+            )
+        return f(*args, **kwargs)
+    return decorated
 
 # Simulated ad revenue persistence file
 AD_STATS_FILE = "ad_stats.json"
@@ -60,6 +82,7 @@ def scholarship_detail(sch_id):
 
 
 @app.route("/admin")
+@admin_required
 def admin():
     return render_template("admin.html")
 
