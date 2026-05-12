@@ -1,0 +1,95 @@
+[Final Master Plan] Antigravity x Telegram 장학금 비서 시스템
+
+이 문서는 Antigravity 에이전트가 시스템의 전체 구조를 파악하고, 각 모듈을 도구(Tool)로 활용하여 사용자의 장학금 신청 과정을 보조하기 위한 최종 마스터 플랜입니다.
+
+1. 프로젝트 개요
+
+목적: 대학생 개별 프로필(성적, 소득, 지역)에 최적화된 장학금을 발굴하고 알림 및 신청을 자동화함.
+
+핵심 가치: 정보 비대칭 해소, 신청 프로세스 효율화, AI 기반 적합도 정밀 분석.
+
+2. 시스템 아키텍처 및 파일 구조
+
+시스템은 총 5개의 핵심 파이썬 모듈과 1개의 데이터베이스로 구성됩니다.
+
+파일명
+
+역할
+
+주요 기능
+
+database.py
+
+Data Layer
+
+유저 프로필 및 공고 데이터 저장/조회 (SQLite)
+
+kosaf_scraper.py
+
+Scraping Layer
+
+한국장학재단 웹사이트 실시간 공고 수집 (Playwright)
+
+telegram_bot.py
+
+UI Layer
+
+사용자와의 인터페이스, 프로필 등록 대화창 관리
+
+matching_engine.py
+
+Logic Layer
+
+유저 정보와 공고 요건 간의 적합도 점수 계산
+
+agent_tools.py
+
+Agent Interface
+
+Antigravity 에이전트가 호출할 수 있는 함수 정의 (Manifest)
+
+antigravity_bot.db
+
+Persistent Store
+
+모든 데이터가 저장되는 로컬 데이터베이스 파일
+
+3. 핵심 워크플로우 (Agent Mission)
+
+Antigravity 에이전트는 다음 순서에 따라 행동합니다.
+
+데이터 동기화: agent_tools.refresh_scholarship_data()를 호출하여 최신 공고를 DB에 업데이트.
+
+유저 분석: agent_tools.get_user_and_matches()를 통해 특정 유저의 정보와 추천 리스트를 확보.
+
+심층 매칭: 매칭 엔진의 점수를 바탕으로, LLM이 공고의 세부 텍스트(지원 제외 대상 등)를 분석하여 최종 추천 여부 결정.
+
+사용자 소통: 분석 결과를 사람이 이해하기 쉬운 문장으로 요약하여 텔레그램을 통해 전달.
+
+4. 데이터 스키마 상세
+
+User: user_id, gpa, income, location, major
+
+Scholarship: category, title, period, status, source, collected_at
+
+5. 단계별 개발 로드맵 (Status)
+
+Phase 1 & 2: 인프라 및 지능화 구축 [COMPLETED]
+
+[x] 기본 스크래퍼 및 텔레그램 프로필 등록 봇 구현
+
+[x] SQLite 기반 통합 데이터베이스 레이어 구축
+
+[x] 매칭 엔진(Scoring Engine) 및 에이전트 호출 인터페이스 정의
+
+Phase 3: 자동 신청 및 고도화 [NEXT STEP]
+
+[ ] 자동 신청 루프: Playwright를 이용한 로그인 및 서류 제출 보조 기능 개발.
+
+[ ] PDF/이미지 분석: 공고문에 첨부된 이미지/PDF 요강을 OCR로 읽어 조건 추출.
+
+6. 에이전트 가이드라인 (For Antigravity)
+
+모든 데이터는 antigravity_bot.db를 중심으로 순환합니다.
+
+에이전트는 단순히 DB 쿼리만 하지 말고 매칭 엔진의 점수(score)와 이유(reasons)를 해석하여 친절하게 설명하세요.

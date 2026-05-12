@@ -1,0 +1,14 @@
+from database import db
+from matching_engine import brain
+from kosaf_scraper import KosafScraper
+
+def get_user_and_matches(user_id: str):
+    user = db.get_user_profile(user_id)
+    if not user: return f"User {user_id}의 프로필이 없습니다."
+    return {"user_profile": user, "recommended_scholarships": brain.get_matches(user_id)}
+
+async def refresh_scholarship_data():
+    scraper = KosafScraper()
+    results = await scraper.fetch_scholarship_list()
+    db.save_scholarships(results)
+    return f"{len(results)}건의 신규 공고가 업데이트되었습니다."

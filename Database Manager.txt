@@ -1,0 +1,71 @@
+import sqlite3
+from datetime import datetime
+
+class ScholarshipDB:
+    def __init__(self, db_name="antigravity_bot.db"):
+        self.conn = sqlite3.connect(db_name, check_same_thread=False)
+        self.create_tables()
+
+    def create_tables(self):
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                user_id TEXT PRIMARY KEY,
+                gpa TEXT,
+                income TEXT,
+                location TEXT,
+                major TEXT,
+                updated_at TIMESTAMP
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS scholarships (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                category TEXT,
+                title TEXT,
+                period TEXT,
+                status TEXT,
+                source TEXT,
+                collected_at TIMESTAMP,
+                UNIQUE(title, period)
+            )
+        ''')
+        self.conn.commit()
+
+    def save_user_profile(self, user_id, profile_data):
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            INSERT OR REPLACE INTO users (user_id, gpa, income, location, major, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (user_id, profile_data['gpa'], profile_data['income'], 
+              profile_data['location'], profile_data['major'], datetime.now()))
+        self.conn.commit()
+
+    def save_scholarships(self, scholarship_list):
+        cursor = self.conn.cursor()
+        for item in scholarship_list:
+            try:
+                cursor.execute('''
+                    INSERT OR IGNORE INTO scholarships (category, title, period, status, source, collected_at)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (item['category'], item['title'], item['period'], 
+                      item['status'], item['source'], item['collected_at']))
+            except Exception as e:
+                print(f"Error saving scholarship: {e}")
+        self.conn.commit()
+
+    def get_user_profile(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE user_id = ?', (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return {"user_id": row[0], "gpa": row[1], "income": row[2], "location": row[3], "major": row[4]}
+        return None
+
+    def get_all_scholarships(self):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM scholarships ORDER BY collected_at DESC')
+        columns = [column[0] for column in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+db = ScholarshipDB()

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="드림포켓에서 3초 만에 나에게 딱 맞는 대학생 맞춤 장학금을 찾아보세요! 학점, 소득분위, 거주지, 전공만 입력하면 실시간으로 분석하여 매칭해 드립니다.">
+    <meta name="keywords" content="대학생 장학금, 맞춤 장학금, 소득분위 장학금, 장학금 매칭, 드림포켓, 국가장학금, 지자체 장학금, 청년 장학금">
+    <title>드림포켓 | 대학생 맞춤 장학금 실시간 매칭</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+
+    <!-- Stars Particles background -->
+    <div class="stars-bg"></div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo-container">
+            <i class="fa-solid fa-wallet logo-icon"></i>
+            <span class="logo-text">드림포켓</span>
+        </div>
+    </header>
+
+    <main id="app-container">
+        
+        <!-- ==================================================== -->
+        <!-- SCREEN 1: Welcome Intro Card (2-Column Desktop Split Layout) -->
+        <!-- ==================================================== -->
+        <section class="intro-screen active" id="intro-screen">
+            <div class="welcome-container">
+                
+                <!-- Left Column: Rich Brand Info & Social Proof Tickers -->
+                <div class="brand-showcase-box">
+                    <span class="brand-tag"><i class="fa-solid fa-database"></i> SCHOLARSHIP MATCHING SYSTEM</span>
+                    <h2 class="brand-hero-title">대학생 숨은 장학금,<br>이제 <span>주머니</span>에서 꺼내세요</h2>
+                    <p class="brand-hero-desc">
+                        드림포켓은 인서울 대학생들의 학점, 소득분위, 거주지, 전공을 실시간 정밀 가중치로 매칭하여, 복잡한 검색 없이 단 3초 만에 지금 당장 수혜 가능한 나만의 전용 장학 혜택을 찾아드립니다.
+                    </p>
+                    
+                    <!-- Live Stats Dashboard -->
+                    <div class="live-stats-dashboard">
+                        <div class="stat-card">
+                            <span class="stat-num">37개</span>
+                            <span class="stat-lbl">실시간 연동 공고</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num">4,250만+</span>
+                            <span class="stat-lbl">누적 매칭 혜택(원)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Realtime Rolling Matching Ticker -->
+                    <div class="realtime-ticker-wrapper">
+                        <div class="ticker-header">
+                            <i class="fa-solid fa-bolt text-warning pulse-fast"></i>
+                            <span>실시간 매칭 상황 라이브</span>
+                        </div>
+                        <div class="ticker-body">
+                            <div class="ticker-track">
+                                <div class="ticker-item">💡 방금 전 사범대학 학생이 '서울희망 장학금' 매칭!</div>
+                                <div class="ticker-item">⚡ 3초 전 컴퓨터공학과 학생이 '이공계 청년 장학금' 매칭!</div>
+                                <div class="ticker-item">🎉 12초 전 경영학과 학생이 '상경계열 전문 인재 장학금' 매칭!</div>
+                                <div class="ticker-item">🔥 25초 전 국어국문학과 학생이 '지역 인재 우대 장학금' 매칭!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Welcome Onboarding Stepper Entry Card -->
+                <div class="welcome-box glass-panel">
+                    <div class="gem-animation-wrap">
+                        <i class="fa-solid fa-wallet pulsing-gem-main"></i>
+                    </div>
+                    <h1 class="welcome-title">내 조건에 맞는 숨겨진<br><span>장학 혜택</span>을 주머니에 담아보세요!</h1>
+                    <p class="welcome-subtitle">
+                        번거로운 회원가입 없이 학점, 소득분위, 전공, 지역 단 4가지 조건으로<br>현재 즉시 신청 가능한 모든 장학공고를 3초 만에 정밀 매칭합니다.
+                    </p>
+                    
+                    <button type="button" class="start-btn" id="start-survey-btn">
+                        <span>3초 만에 내 드림포켓 열기</span>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- SCREEN 2: Step-by-Step Questionnaire Form (Toss Style) -->
+        <!-- ==================================================== -->
+        <section class="survey-screen" id="survey-screen">
+            <div class="survey-card glass-panel">
+                
+                <!-- Stepper Progress Bar -->
+                <div class="stepper-header">
+                    <div class="step-progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 25%;"></div>
+                    </div>
+                    <div class="step-counter-text" id="step-counter-text">1 / 4 단계</div>
+                </div>
+
+                <!-- Form element (SPA Stepper) -->
+                <form id="matching-stepper-form">
+                    
+                    <!-- STEP 1: GPA Input -->
+                    <div class="step-card active" data-step="1">
+                        <div class="step-icon-wrap text-primary">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="step-question">현재 기준 직전 학기 학점은 어떻게 되나요?</h2>
+                        <p class="step-desc">본인의 평균 평점(4.5 만점 기준)을 조절해 주세요.</p>
+                        
+                        <div class="gpa-interactive-box">
+                            <div class="gpa-slider-container">
+                                <input type="range" class="gpa-slider" id="gpa-input" min="0.0" max="4.5" step="0.1" value="3.5">
+                                <div class="gpa-slider-track-fill"></div>
+                            </div>
+                            <div class="gpa-value-display" id="gpa-val">3.50 / 4.5</div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Income Bracket Grid buttons -->
+                    <div class="step-card" data-step="2">
+                        <div class="step-icon-wrap text-success">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <h2 class="step-question">가구의 소득구간(소득분위)은 몇 분위인가요?</h2>
+                        <p class="step-desc">한국장학재단 소득 연계 분위 기준이며, 터치 시 자동으로 다음 단계로 넘어갑니다.</p>
+                        
+                        <div class="income-step-wrapper">
+                            <div class="btn-grid">
+                                <button type="button" class="grid-btn active" data-val="1">1구간</button>
+                                <button type="button" class="grid-btn" data-val="2">2구간</button>
+                                <button type="button" class="grid-btn" data-val="3">3구간</button>
+                                <button type="button" class="grid-btn" data-val="4">4구간</button>
+                                <button type="button" class="grid-btn" data-val="5">5구간</button>
+                                <button type="button" class="grid-btn" data-val="6">6구간</button>
+                                <button type="button" class="grid-btn" data-val="7">7구간</button>
+                                <button type="button" class="grid-btn" data-val="8">8구간</button>
+                                <button type="button" class="grid-btn" data-val="9">9구간</button>
+                                <button type="button" class="grid-btn" data-val="10">10구간</button>
+                                <button type="button" class="grid-btn grid-btn-full" data-val="모름">잘 모름 / 해당 없음</button>
+                            </div>
+                            <input type="hidden" id="income-input" value="1">
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Clickable Location Grid (One-touch UX) -->
+                    <div class="step-card" data-step="3">
+                        <div class="step-icon-wrap text-warning">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <h2 class="step-question">주민등록등본상 거주 지역은 어디인가요?</h2>
+                        <p class="step-desc">지자체 전용 우대 장학금을 매칭하며, 터치 시 자동으로 전공 단계로 넘어갑니다.</p>
+                        
+                        <div class="location-step-wrapper">
+                            <div class="btn-grid location-grid">
+                                <button type="button" class="grid-btn" data-loc="서울특별시">서울</button>
+                                <button type="button" class="grid-btn" data-loc="경기도">경기</button>
+                                <button type="button" class="grid-btn" data-loc="인천광역시">인천</button>
+                                <button type="button" class="grid-btn active" data-loc="광주광역시">광주</button>
+                                <button type="button" class="grid-btn" data-loc="전라남도">전남</button>
+                                <button type="button" class="grid-btn" data-loc="전라북도">전북</button>
+                                <button type="button" class="grid-btn" data-loc="부산광역시">부산</button>
+                                <button type="button" class="grid-btn" data-loc="대구광역시">대구</button>
+                                <button type="button" class="grid-btn" data-loc="울산광역시">울산</button>
+                                <button type="button" class="grid-btn" data-loc="경상남도">경남</button>
+                                <button type="button" class="grid-btn" data-loc="경상북도">경북</button>
+                                <button type="button" class="grid-btn" data-loc="충청남도">충남</button>
+                                <button type="button" class="grid-btn" data-loc="충청북도">충북</button>
+                                <button type="button" class="grid-btn" data-loc="대전광역시">대전</button>
+                                <button type="button" class="grid-btn" data-loc="강원특별자치도">강원</button>
+                                <button type="button" class="grid-btn" data-loc="제주특별자치도">제주</button>
+                                <button type="button" class="grid-btn grid-btn-full" data-loc="">선택하지 않음 (기본값)</button>
+                            </div>
+                            <input type="hidden" id="location-input" value="광주광역시">
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: Standard College & Department Selectors -->
+                    <div class="step-card" data-step="4">
+                        <div class="step-icon-wrap text-purple">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="step-question">소속 단과대학 및 세부 전공학과는 무엇인가요?</h2>
+                        <p class="step-desc">인서울 대학 표준 학제 기반이며, 오타 없이 정확하게 매칭됩니다.</p>
+                        
+                        <div class="major-selectors-wrap">
+                            <div class="form-group-select">
+                                <label class="select-label">소속 단과대학 (대분류)</label>
+                                <select class="custom-select" id="major-category">
+                                    <option value="공과대학" selected>공과대학 (College of Engineering)</option>
+                                    <option value="경영대학 / 상경대학">경영대학 / 상경대학 (Business School)</option>
+                                    <option value="사회과학대학">사회과학대학 (College of Social Sciences)</option>
+                                    <option value="인문대학">인문대학 (College of Humanities)</option>
+                                    <option value="자연과학대학">자연과학대학 (College of Natural Sciences)</option>
+                                    <option value="사범대학">사범대학 (College of Education)</option>
+                                    <option value="의과대학 / 약학대학">의과대학 / 약학대학 (Medicine & Pharmacy)</option>
+                                    <option value="예술·체육대학">예술·체육대학 (Fine Arts & Sports)</option>
+                                    <option value="자유전공학부">자유전공학부 / 융합학부</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group-select">
+                                <label class="select-label">세부 전공학과 (소분류)</label>
+                                <select class="custom-select" id="major-input">
+                                    <!-- Populated dynamically via JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Footer buttons -->
+                    <div class="stepper-nav-footer">
+                        <button type="button" class="nav-btn prev-btn hidden" id="prev-step-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>이전</span>
+                        </button>
+                        <button type="button" class="nav-btn next-btn" id="next-step-btn">
+                            <span>다음</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- SCREEN 3: Interstitial AI Analysis Loader overlay -->
+        <!-- ==================================================== -->
+        <section class="analysis-loader-screen" id="analysis-loader-screen">
+            <div class="loader-box glass-panel">
+                <div class="pulsing-gem-wrapper">
+                    <i class="fa-solid fa-database floating-gem"></i>
+                    <div class="pulsing-glow"></div>
+                </div>
+                <div class="loader-spinner"></div>
+                <h2 class="loader-title" id="loader-title">사용자 조건 정밀 판독 중...</h2>
+                <p class="loader-subtitle">매칭 엔진이 실시간으로 내 드림포켓을 샅샅이 검색하고 있습니다.</p>
+            </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- SCREEN 4: Full-Screen Results Dashboard Board -->
+        <!-- ==================================================== -->
+        <section class="results-screen" id="results-screen">
+            
+            <!-- Dashboard Top Action Bar -->
+            <div class="results-header-bar glass-panel">
+                <button type="button" class="back-modify-btn" id="back-modify-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>조건 수정</span>
+                </button>
+                
+                <div class="header-summary-badge">
+                    <div class="summary-item">
+                        <span class="label">전체 보유 공고</span>
+                        <span class="val" id="total-sch-count">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">최근 정보 갱신</span>
+                        <span class="val" id="last-update-time">로딩 중...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Results Workspace Grid Layout -->
+            <div class="results-workspace">
+                
+                <!-- Tab Controls -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" id="tab-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>즉시 지원 가능 장학금</span>
+                        <span class="tab-badge bg-primary" id="success-badge">0</span>
+                    </button>
+                    <button class="tab-btn" id="tab-gaps">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>아쉬운 조건 미달 공고 (성장 가이드)</span>
+                        <span class="tab-badge bg-warning" id="gaps-badge">0</span>
+                    </button>
+                </div>
+
+                <!-- Tab Contents success -->
+                <div class="tab-content active" id="content-success">
+                    <div class="scholarship-grid" id="success-list">
+                        <!-- Dynamic list insertions -->
+                    </div>
+                </div>
+
+                <!-- Tab Contents gaps -->
+                <div class="tab-content" id="content-gaps">
+                    <div class="scholarship-grid" id="gaps-list">
+                        <!-- Dynamic list insertions -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">
+            © 2026 드림포켓 (DreamPocket) Matching System. All Rights Reserved.
+        </div>
+        <div class="footer-logo">
+            <i class="fa-solid fa-shield-halved"></i> 보안 가동중
+        </div>
+    </footer>
+
+    <!-- Core Script -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

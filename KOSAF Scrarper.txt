@@ -1,0 +1,27 @@
+import asyncio
+from datetime import datetime
+from playwright.async_api import async_playwright
+from database import db
+
+class KosafScraper:
+    async def fetch_scholarship_list(self):
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
+            await page.goto("https://www.kosaf.go.kr/ko/scholar.do?pg=scholar05_04_01", wait_until="networkidle")
+            rows = await page.query_selector_all("table.table_st01 tbody tr")
+            scholarships = []
+            for row in rows:
+                cells = await row.query_selector_all("td")
+                if len(cells) < 4: continue
+                title_element = await cells[2].query_selector("a")
+                scholarships.append({
+                    "category": (await cells[1].inner_text()).strip(),
+                    "title": (await title_element.inner_text()).strip(),
+                    "period": (await cells[3].inner_text()).strip(),
+                    "status": (await cells[4].inner_text()).strip(),
+                    "source": "KOSAF",
+                    "collected_at": datetime.now().isoformat()
+                })
+            await browser.close()
+            return scholarships

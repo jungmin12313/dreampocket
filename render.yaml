@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: dreampocket
+    env: python
+    buildCommand: pip install -r requirements.txt && playwright install chromium && playwright install-deps chromium
+    startCommand: gunicorn app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONIOENCODING
+        value: utf-8
+    disk:
+      name: scholarship-db
+      mountPath: /opt/render/project/src
+      sizeGB: 1

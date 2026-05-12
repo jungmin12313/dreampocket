@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ sch.title }} - 신청 기간, 수혜 조건, 공식 공고 링크를 드림포켓에서 확인하고 나에게 맞는 혜택을 놓치지 마세요.">
+    <meta name="keywords" content="드림포켓, 대학생 장학금, {{ sch.category }}, 맞춤 장학금">
+    <title>{{ sch.title }} | 드림포켓 장학금 상세정보</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+            --border-color: rgba(226, 232, 240, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .detail-container {
+            width: 100%;
+            max-width: 680px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(37, 99, 235, 0.08);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .info-grid {
+            background-color: rgba(248, 250, 252, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(226, 232, 240, 0.6);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-row:first-child {
+            padding-top: 0;
+        }
+
+        .info-label {
+            width: 120px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+        }
+
+        .info-label i {
+            width: 20px;
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        .info-value {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .apply-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .apply-btn i {
+            margin-left: 8px;
+        }
+
+        .apply-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="detail-container">
+        <a href="/" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>드림포켓 메인으로 가기</span>
+        </a>
+
+        <div class="badge">{{ sch.category }}</div>
+        <h1 class="title">{{ sch.title }}</h1>
+
+        <div class="info-grid">
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>신청 기간</span>
+                </div>
+                <div class="info-value"><strong>{{ sch.period }}</strong></div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>모집 상태</span>
+                </div>
+                <div class="info-value">{{ sch.status }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>정보 수집일</span>
+                </div>
+                <div class="info-value">{{ sch.collected_at[:16] if sch.collected_at else '상시' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>공식 출처</span>
+                </div>
+                <div class="info-value" style="word-break: break-all;">
+                    <a href="{{ sch.source }}" target="_blank" style="color: var(--primary); text-decoration: none;">{{ sch.source }}</a>
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ sch.source }}" target="_blank" class="apply-btn">
+            <span>공식 공고 확인하고 지원하기</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+    </div>
+
+    <footer>
+        © 2026 드림포켓 (DreamPocket) Matching System. All Rights Reserved.
+    </footer>
+
+</body>
+</html>

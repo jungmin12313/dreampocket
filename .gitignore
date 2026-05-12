@@ -1,0 +1,23 @@
+# Local Environment Secrets
+.env
+.env.local
+
+# Local Databases and Stats Serialization
+*.db
+*.db-journal
+ad_stats.json
+
+# Python caching & artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+
+# IDEs & System files
+.vscode/
+.idea/
+.gemini/
+.DS_Store
+Thumbs.db
