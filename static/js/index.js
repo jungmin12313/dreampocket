@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const analysisTexts = [
             "사용자 조건 정밀 판독 중...",
             "소득 연계 분위 및 거주 지역 매칭 중...",
-            "37개 장학 요강 적합도 및 가중치 분석 중...",
+            "장학 요강 적합도 및 가중치 분석 중...",
             "최적 맞춤 드림포켓 정렬 중..."
         ];
 
@@ -473,4 +473,22 @@ document.addEventListener("DOMContentLoaded", function () {
     populateMajors();
     initStats();
     bindAdClicks();
+
+    // Hero 섹션 실제 공고 수 연동
+    fetch("/api/stats")
+        .then(res => res.json())
+        .then(data => {
+            const heroCount = document.getElementById("hero-sch-count");
+            const heroTime = document.getElementById("hero-update-time");
+            if (heroCount) heroCount.innerText = data.scholarships.total + "개";
+            if (heroTime) {
+                // 최근 업데이트 시간 간략 표시 (날짜만)
+                const t = data.scholarships.last_updated || "";
+                heroTime.innerText = t.length >= 10 ? t.substring(0, 10) : (t || "--");
+            }
+        })
+        .catch(() => {
+            const heroCount = document.getElementById("hero-sch-count");
+            if (heroCount) heroCount.innerText = "--";
+        });
 });

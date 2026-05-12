@@ -63,6 +63,14 @@ def scholarship_detail(sch_id):
 def admin():
     return render_template("admin.html")
 
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
 @app.route("/api/stats", methods=["GET"])
 def get_stats():
     # 1. Scholarship stats from DB

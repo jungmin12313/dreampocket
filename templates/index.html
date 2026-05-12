@@ -44,30 +44,31 @@
                         드림포켓은 인서울 대학생들의 학점, 소득분위, 거주지, 전공을 실시간 정밀 가중치로 매칭하여, 복잡한 검색 없이 단 3초 만에 지금 당장 수혜 가능한 나만의 전용 장학 혜택을 찾아드립니다.
                     </p>
                     
-                    <!-- Live Stats Dashboard -->
+                    <!-- Live Stats Dashboard (실제 DB 연동) -->
                     <div class="live-stats-dashboard">
                         <div class="stat-card">
-                            <span class="stat-num">37개</span>
+                            <span class="stat-num" id="hero-sch-count">--</span>
                             <span class="stat-lbl">실시간 연동 공고</span>
                         </div>
                         <div class="stat-card">
-                            <span class="stat-num">4,250만+</span>
-                            <span class="stat-lbl">누적 매칭 혜택(원)</span>
+                            <span class="stat-num" id="hero-update-time">--</span>
+                            <span class="stat-lbl">최근 데이터 갱신</span>
                         </div>
                     </div>
                     
-                    <!-- Realtime Rolling Matching Ticker -->
+                    <!-- 매칭 사례 예시 (실제 이용자 데이터와 무관한 서비스 설명용 예시입니다) -->
                     <div class="realtime-ticker-wrapper">
                         <div class="ticker-header">
                             <i class="fa-solid fa-bolt text-warning pulse-fast"></i>
-                            <span>실시간 매칭 상황 라이브</span>
+                            <span>이런 분들이 장학금을 찾고 있어요</span>
+                            <span style="font-size:10px;color:#64748b;margin-left:8px;">(서비스 예시)</span>
                         </div>
                         <div class="ticker-body">
                             <div class="ticker-track">
-                                <div class="ticker-item">💡 방금 전 사범대학 학생이 '서울희망 장학금' 매칭!</div>
-                                <div class="ticker-item">⚡ 3초 전 컴퓨터공학과 학생이 '이공계 청년 장학금' 매칭!</div>
-                                <div class="ticker-item">🎉 12초 전 경영학과 학생이 '상경계열 전문 인재 장학금' 매칭!</div>
-                                <div class="ticker-item">🔥 25초 전 국어국문학과 학생이 '지역 인재 우대 장학금' 매칭!</div>
+                                <div class="ticker-item">💡 사범대학 학생 → '서울희망 장학금' 매칭 사례</div>
+                                <div class="ticker-item">⚡ 컴퓨터공학과 학생 → '이공계 청년 장학금' 매칭 사례</div>
+                                <div class="ticker-item">🎉 경영학과 학생 → '상경계열 전문 인재 장학금' 매칭 사례</div>
+                                <div class="ticker-item">🔥 국어국문학과 학생 → '지역 인재 우대 장학금' 매칭 사례</div>
                             </div>
                         </div>
                     </div>
@@ -315,6 +316,11 @@
     <footer>
         <div class="footer-text">
             © 2026 드림포켓 (DreamPocket) Matching System. All Rights Reserved.
+        </div>
+        <div class="footer-links">
+            <a href="/privacy" target="_blank">개인정보처리방침</a>
+            <span>·</span>
+            <a href="/terms" target="_blank">이용약관</a>
         </div>
         <div class="footer-logo">
             <i class="fa-solid fa-shield-halved"></i> 보안 가동중
