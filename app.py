@@ -103,9 +103,72 @@ def admin_required(f):
 
 # Routes
 
+def render_home(preset_region="", preset_major="", seo_title=None, seo_desc=None):
+    if not seo_title:
+        seo_title = "드림포켓 | 대학생 맞춤 장학금 실시간 매칭"
+    if not seo_desc:
+        seo_desc = "드림포켓에서 3초 만에 나에게 딱 맞는 대학생 맞춤 장학금을 찾아보세요! 학점, 소득분위, 거주지, 전공만 입력하면 실시간으로 분석하여 매칭해 드립니다."
+        
+    return render_template(
+        "index.html", 
+        seo_title=seo_title, 
+        seo_desc=seo_desc,
+        preset_region=preset_region,
+        preset_major=preset_major
+    )
+
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_home()
+
+@app.route("/region/<region_name>")
+def region_home(region_name):
+    # e.g. 부산광역시
+    seo_title = f"{region_name} 대학생 장학금 찾기 - 드림포켓"
+    seo_desc = f"{region_name} 거주 대학생을 위한 지자체 장학금 및 지원 혜택을 드림포켓에서 3초 만에 확인하세요."
+    return render_home(preset_region=region_name, seo_title=seo_title, seo_desc=seo_desc)
+
+@app.route("/major/<major_name>")
+def major_home(major_name):
+    # e.g. 컴퓨터공학과
+    seo_title = f"{major_name} 전공 대학생 장학금 찾기 - 드림포켓"
+    seo_desc = f"{major_name} 학생들을 위한 학과 맞춤형 전공 장학금을 실시간으로 매칭해 드립니다."
+    return render_home(preset_major=major_name, seo_title=seo_title, seo_desc=seo_desc)
+
+@app.route("/robots.txt")
+def robots_txt():
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Sitemap: https://dreampocket.onrender.com/sitemap.xml"
+    ]
+    return Response("\n".join(lines), mimetype="text/plain")
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    base_url = "https://dreampocket.onrender.com"
+    urls = []
+    
+    # Base URL
+    urls.append(f"<url><loc>{base_url}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>")
+    
+    # Regions
+    regions = ["서울특별시", "경기도", "인천광역시", "부산광역시", "대구광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "강원특별자치도", "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"]
+    for r in regions:
+        urls.append(f"<url><loc>{base_url}/region/{r}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>")
+        
+    # Majors (Sample top majors)
+    majors = ["컴퓨터공학과", "경영학과", "경제학과", "기계공학과", "전자공학과", "간호학과", "사회복지학과"]
+    for m in majors:
+        urls.append(f"<url><loc>{base_url}/major/{m}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>")
+        
+    # Individual Scholarships
+    schs = db.get_all_scholarships()
+    for sch in schs:
+        urls.append(f"<url><loc>{base_url}/scholarship/{sch['id']}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>")
+        
+    xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>"
+    return Response(xml, mimetype="application/xml")
 
 @app.route("/scholarship/<int:sch_id>")
 def scholarship_detail(sch_id):

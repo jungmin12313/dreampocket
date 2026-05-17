@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="드림포켓에서 3초 만에 나에게 딱 맞는 대학생 맞춤 장학금을 찾아보세요! 학점, 소득분위, 거주지, 전공만 입력하면 실시간으로 분석하여 매칭해 드립니다.">
+    <meta name="description" content="{{ seo_desc }}">
     <meta name="keywords" content="대학생 장학금, 맞춤 장학금, 소득분위 장학금, 장학금 매칭, 드림포켓, 국가장학금, 지자체 장학금, 청년 장학금">
-    <title>드림포켓 | 대학생 맞춤 장학금 실시간 매칭</title>
+    <title>{{ seo_title }}</title>
+    
+    <!-- OpenGraph SEO Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_desc }}">
+    <meta property="og:url" content="https://dreampocket.onrender.com{{ request.path }}">
+    <meta property="og:site_name" content="드림포켓 (DreamPocket)">
+    <meta property="og:image" content="https://dreampocket.onrender.com/static/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <script>
+        window.PRESET_REGION = "{{ preset_region }}";
+        window.PRESET_MAJOR = "{{ preset_major }}";
+    </script>
+    
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Premium Fonts -->

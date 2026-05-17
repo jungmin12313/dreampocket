@@ -599,6 +599,45 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function initPresets() {
+        if (window.PRESET_REGION) {
+            locationInput.value = window.PRESET_REGION;
+            // Update UI
+            const locationBtns = document.querySelectorAll(".location-step-wrapper .grid-btn");
+            locationBtns.forEach(btn => {
+                if (btn.getAttribute("data-loc") === window.PRESET_REGION) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+            // Automatically open stepper
+            introScreen.classList.remove("active");
+            surveyScreen.classList.add("active");
+            currentStep = 3; // jump to region step
+            updateStepperUI();
+        }
+        if (window.PRESET_MAJOR) {
+            // Find which category this major belongs to
+            let foundCategory = "공과대학";
+            for (const [cat, majors] of Object.entries(ACADEMIC_MAJOR_MAP)) {
+                if (majors.some(m => m.val === window.PRESET_MAJOR)) {
+                    foundCategory = cat;
+                    break;
+                }
+            }
+            majorCategory.value = foundCategory;
+            populateMajors();
+            majorInput.value = window.PRESET_MAJOR;
+            
+            // Automatically open stepper
+            introScreen.classList.remove("active");
+            surveyScreen.classList.add("active");
+            currentStep = 4; // jump to major step
+            updateStepperUI();
+        }
+    }
+
     function initStats() {
         fetch("/api/stats")
             .then(res => res.json())
@@ -617,6 +656,7 @@ document.addEventListener("DOMContentLoaded", function () {
     populateMajors();
     initStats();
     initFromUrl();
+    initPresets();
     bindAdClicks();
 
     // Hero stats
