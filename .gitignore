@@ -2,10 +2,12 @@
 .env
 .env.local
 
-# Local Databases and Stats Serialization
-*.db
-*.db-journal
-ad_stats.json
+# Data Folder (Databases and Stats)
+data/*.db
+data/*.db-journal
+data/*.json
+# But keep the data directory itself if needed (though app.py creates it)
+!data/.gitkeep
 
 # Python caching & artifacts
 __pycache__/

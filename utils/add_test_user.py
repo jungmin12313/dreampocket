@@ -1,6 +1,6 @@
 import asyncio
-from database import db
-from agent_tools import get_user_and_matches
+from core.database import db
+from core.agent_tools import get_user_and_matches
 
 def main():
     print("Inserting test user profile...")

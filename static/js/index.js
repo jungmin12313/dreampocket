@@ -185,10 +185,69 @@ document.addEventListener("DOMContentLoaded", function () {
     // Step Inputs Interaction Logic
     // ----------------------------------------------------
 
-    // Step 1: GPA Range display updater
-    gpaInput.addEventListener("input", function () {
-        gpaVal.innerText = `${parseFloat(gpaInput.value).toFixed(2)} / 4.5`;
+    // GPA Scale Selection
+    const scaleBtns = document.querySelectorAll(".scale-btn");
+    let currentScale = 4.5;
+    
+    scaleBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+            scaleBtns.forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            currentScale = parseFloat(this.dataset.scale);
+            
+            // Update slider max and UI
+            gpaInput.max = currentScale;
+            let val = parseFloat(gpaInput.value);
+            if (val > currentScale) {
+                val = currentScale;
+                gpaInput.value = val;
+            }
+            gpaVal.innerText = `${val.toFixed(2)} / ${currentScale}`;
+            
+            const trackFill = document.querySelector(".gpa-slider-track-fill");
+            if(trackFill) {
+                const percent = (val / currentScale) * 100;
+                trackFill.style.width = `${percent}%`;
+            }
+        });
     });
+
+    // Income Modal Controls
+    const incomeModal = document.getElementById("income-modal");
+    const openIncomeModal = document.getElementById("open-income-modal");
+    const closeIncomeModal = document.querySelector(".close-modal");
+    
+    if (openIncomeModal) {
+        openIncomeModal.addEventListener("click", function(e) {
+            e.preventDefault();
+            incomeModal.classList.add("active");
+        });
+    }
+    
+    if (closeIncomeModal) {
+        closeIncomeModal.addEventListener("click", function() {
+            incomeModal.classList.remove("active");
+        });
+    }
+
+    // Step 1: GPA Range display updater
+    gpaInput.addEventListener("input", function (e) {
+        const val = parseFloat(e.target.value).toFixed(2);
+        gpaVal.innerText = `${val} / ${currentScale}`;
+        
+        // Update track fill if present
+        const trackFill = document.querySelector(".gpa-slider-track-fill");
+        if(trackFill) {
+            const percent = (val / currentScale) * 100;
+            trackFill.style.width = `${percent}%`;
+        }
+    });
+
+    function getNormalizedGPA() {
+        const rawGpa = parseFloat(gpaInput.value);
+        // Normalize to 4.5 scale for engine consistency
+        return ((rawGpa / currentScale) * 4.5).toFixed(2);
+    }
 
     // Step 2: One-touch Income Bracket Selection & Auto-advance
     const incomeBtns = document.querySelectorAll(".income-step-wrapper .grid-btn");
@@ -250,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Prepare match request data
         const payload = {
-            gpa: gpaInput.value,
+            gpa: getNormalizedGPA(),
             income: incomeInput.value === "모름" ? "모름" : `${incomeInput.value}구간`,
             location: locationInput.value,
             major: majorInput.value
@@ -356,15 +415,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ----------------------------------------------------
-    // Dynamic Listings Rendering
+    // Dynamic Listings Rendering & Animations
     // ----------------------------------------------------
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const val = Math.floor(progress * (end - start) + start);
+            obj.innerHTML = val.toLocaleString() + "원";
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    function shareResults() {
+        const payload = {
+            gpa: gpaInput.value,
+            income: incomeInput.value,
+            location: locationInput.value,
+            major: majorInput.value
+        };
+        const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+        const url = `${window.location.origin}${window.location.pathname}?p=${encoded}`;
+        
+        navigator.clipboard.writeText(url).then(() => {
+            showToast("결과 공유 링크가 복사되었습니다! 🔗", true);
+        }).catch(err => {
+            console.error("Share error:", err);
+            showToast("링크 복사에 실패했습니다.");
+        });
+    }
+
+    document.getElementById("share-link-btn").addEventListener("click", shareResults);
+
     function renderResults(results) {
         const successes = results.success_matches || [];
         const gaps = results.gap_matches || [];
+        const totalAmount = results.total_potential_amount || 0;
 
         // Update counts
         successBadge.innerText = successes.length;
         gapsBadge.innerText = gaps.length;
+
+        // Animate total potential amount
+        const totalAmountDisplay = document.getElementById("total-potential-amount");
+        animateValue(totalAmountDisplay, 0, totalAmount, 1000);
 
         // Render success matches
         if (successes.length === 0) {
@@ -379,16 +477,39 @@ document.addEventListener("DOMContentLoaded", function () {
             let html = "";
             successes.forEach((sch, idx) => {
                 const reasonsHtml = sch.reasons.map(r => `<span class="reason-badge">✓ ${r}</span>`).join("");
+                
+                // Calculate gauge offset (100 is max score, 100 dasharray)
+                const displayScore = Math.min(sch.score, 100);
+                const offset = 100 - displayScore;
+                
+                // Confidence Badge color logic
+                let confidenceClass = "trust-low";
+                if (sch.confidence >= 95) confidenceClass = "trust-verified";
+                else if (sch.confidence >= 80) confidenceClass = "trust-high";
+                
                 html += `
                     <div class="scholarship-card">
+                        <div class="match-gauge-wrap">
+                            <div class="circular-gauge">
+                                <svg viewBox="0 0 36 36">
+                                    <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="progress" style="stroke-dashoffset: ${offset};" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <span class="gauge-val">${sch.score}</span>
+                            </div>
+                            <span class="gauge-label">Match</span>
+                        </div>
                         <div class="card-main">
-                            <div class="card-top-row">
+                            <div class="trust-badge-row">
                                 <span class="category-tag">${sch.category || '일반'}</span>
-                                <span class="match-score-tag">매칭 점수: ${sch.score}점</span>
+                                <span class="trust-badge ${confidenceClass}">
+                                    <i class="fa-solid ${sch.is_verified ? 'fa-circle-check' : 'fa-robot'}"></i>
+                                    ${sch.analysis_status} (${sch.confidence}%)
+                                </span>
                             </div>
                             <h3 class="sch-title">${sch.title}</h3>
                             <div class="sch-detail-item">
-                                <i class="fa-solid fa-calendar-days"></i>
+                                <i class="fa-solid fa-calendar-days" style="color:var(--primary)"></i>
                                 <span>&nbsp;신청 기간: <strong>${sch.period}</strong></span>
                             </div>
                             <div class="card-reasons">
@@ -397,7 +518,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                         <div class="card-action">
                             <a href="${sch.link}" target="_blank" class="apply-btn">
-                                <span>공고 보기</span>
+                                <span>상세 요강 확인</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
                         </div>
@@ -454,27 +575,51 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ----------------------------------------------------
-    // Startup initialization
+    // Startup initialization & URL Restoration
     // ----------------------------------------------------
+    function initFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const p = params.get("p");
+        if (p) {
+            try {
+                const decoded = JSON.parse(decodeURIComponent(atob(p)));
+                // Update inputs
+                gpaInput.value = decoded.gpa || "3.5";
+                gpaVal.innerText = `${parseFloat(gpaInput.value).toFixed(2)} / 4.5`;
+                incomeInput.value = decoded.income || "1";
+                locationInput.value = decoded.location || "";
+                majorInput.value = decoded.major || "";
+                
+                // Immediately submit
+                submitSurvey();
+                showToast("공유된 장학금 매칭 결과를 불러왔습니다. ✨");
+            } catch (e) {
+                console.error("URL Restoration failed:", e);
+            }
+        }
+    }
+
     function initStats() {
         fetch("/api/stats")
             .then(res => res.json())
             .then(data => {
-                totalSchCount.innerText = data.scholarships.total;
-                lastUpdateTime.innerText = `최근 분석: ${data.scholarships.last_updated}`;
+                const totalSchCount = document.getElementById("total-sch-count");
+                const lastUpdateTime = document.getElementById("last-update-time");
+                if (totalSchCount) totalSchCount.innerText = data.scholarships.total;
+                if (lastUpdateTime) lastUpdateTime.innerText = `최근 분석: ${data.scholarships.last_updated}`;
             })
             .catch(err => {
                 console.error("Init stats error:", err);
-                lastUpdateTime.innerText = "DB 연결 대기중";
             });
     }
 
     // Exec
     populateMajors();
     initStats();
+    initFromUrl();
     bindAdClicks();
 
-    // Hero 섹션 실제 공고 수 연동
+    // Hero stats
     fetch("/api/stats")
         .then(res => res.json())
         .then(data => {
@@ -482,13 +627,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const heroTime = document.getElementById("hero-update-time");
             if (heroCount) heroCount.innerText = data.scholarships.total + "개";
             if (heroTime) {
-                // 최근 업데이트 시간 간략 표시 (날짜만)
                 const t = data.scholarships.last_updated || "";
                 heroTime.innerText = t.length >= 10 ? t.substring(0, 10) : (t || "--");
             }
         })
-        .catch(() => {
-            const heroCount = document.getElementById("hero-sch-count");
-            if (heroCount) heroCount.innerText = "--";
-        });
+        .catch(() => {});
 });

@@ -1,5 +1,5 @@
 import re
-from database import db
+from core.database import db
 
 class ScholarshipBrain:
     def calculate_score(self, user_profile, scholarship):
@@ -15,23 +15,31 @@ class ScholarshipBrain:
         sch_category = scholarship.get('category', '')
 
         if user_major:
-            # 1. Exact or substring match in title (e.g. "컴퓨터" matches "컴퓨터공학과")
+            # 1. Exact or substring match in title
             if user_major in sch_title:
                 major_matches = True
-            # 2. Smart categorization mapping to prevent mismatching "경영" vs "컴퓨터" in generic "전공" categories
-            elif sch_category == '전공':
-                is_sch_business = any(k in sch_title for k in ['경영', '경제', '상경', '회계', '세무', '비즈니스'])
-                is_user_business = any(k in user_major for k in ['경영', '경제', '상경', '회계', '세무', '비즈니스', '무역', '유통', '마케팅'])
+            # 2. Advanced semantic categorization
+            elif sch_category == '전공' or any(k in sch_title for k in ['학과', '계열', '전공']):
+                # Define major clusters
+                is_sch_business = any(k in sch_title for k in ['경영', '경제', '상경', '회계', '세무', '비즈니스', '금융'])
+                is_user_business = any(k in user_major for k in ['경영', '경제', '상경', '회계', '세무', '비즈니스', '무역', '유통', '마케팅', '금융'])
                 
-                is_sch_stem = any(k in sch_title for k in ['이공', '공학', 'IT', '컴퓨터', '과학', '수학', '기술', '기계', '전자', '전기', '화학', '생물', '소프트웨어', '개발', '정보', '신소재', '건축', '토목', '의학', '약학'])
+                is_sch_stem = any(k in sch_title for k in ['이공', '공학', 'IT', '컴퓨터', '과학', '수학', '기술', '기계', '전자', '전기', '화학', '생물', '소프트웨어', '개발', '정보', '신소재', '건축', '토목', '의학', '약학', '인공지능', 'AI'])
                 is_user_stem = any(k in user_major for k in ['이공', '공학', 'IT', '컴퓨터', '과학', '수학', '기술', '기계', '전자', '전기', '화학', '생물', '소프트웨어', '개발', '정보', '신소재', '건축', '토목', '의학', '약학', '인공지능', 'AI', '넷', '웹', '앱'])
+                
+                is_sch_arts = any(k in sch_title for k in ['예능', '체능', '예술', '디자인', '음악', '미술', '체육', '스포츠'])
+                is_user_arts = any(k in user_major for k in ['예능', '체능', '예술', '디자인', '음악', '미술', '체육', '스포츠', '만화', '영상', '연극', '무용'])
+                
+                is_sch_edu = any(k in sch_title for k in ['사범', '교육', '교대', '교직'])
+                is_user_edu = any(k in user_major for k in ['사범', '교육', '교대', '교직', '국어교육', '영어교육', '수학교육', '유아교육'])
 
-                if is_sch_business and not is_user_business:
-                    major_matches = False
-                elif is_sch_stem and not is_user_stem:
-                    major_matches = False
-                else:
-                    major_matches = True
+                # Match logic based on clusters
+                if is_sch_business and is_user_business: major_matches = True
+                elif is_sch_stem and is_user_stem: major_matches = True
+                elif is_sch_arts and is_user_arts: major_matches = True
+                elif is_sch_edu and is_user_edu: major_matches = True
+                elif any(k in sch_title for k in ['전체', '무관', '공통']): major_matches = True
+                else: major_matches = False
             else:
                 major_matches = False
 
@@ -93,30 +101,32 @@ class ScholarshipBrain:
             region_reason = "전국구 공고 (거주지 무관 신청 가능)"
 
         if major_matches:
-            score += 40
-            reasons.append("전공 분야 일치")
+            score += 45 # Increased from 40
+            reasons.append("전공 분야 최적 매칭")
         if location_matches and region_reason:
             score += region_score
             reasons.append(region_reason)
 
-        score += 15  # Base score (up from 10)
+        score += 20  # Base score (up from 15)
 
         # Bonus: Category type bonus
-        if sch_category == '국가 장학금':
-            score += 10
-            reasons.append("국가 장학금 (KOSAF 관리)")
+        if sch_category == '국가 장학금' or '한국장학재단' in sch_title:
+            score += 15
+            reasons.append("국가 지원 (신뢰도 최상)")
         elif sch_category == '민간 장학금':
             score += 5
-            reasons.append("민간 장학금 (기업/재단)")
+            reasons.append("민간 기업/재단 장학")
         elif sch_category in ['지역 장학금', '지자체 장학금']:
-            score += 8
-            reasons.append("지역 장학금 (지자체 지원)")
+            score += 12 # Increased from 8
+            reasons.append("지역 연고 우대 장학")
 
-        # 2. Parse GPA limits from scholarship title (e.g., "학점 3.0 이상")
-        gpa_required = None
-        gpa_match = re.search(r'학점\s*(\d+\.\d+|\d+)', scholarship['title'])
-        if gpa_match:
-            gpa_required = float(gpa_match.group(1))
+        # 2. GPA Requirement logic
+        # Priority: Structured DB field -> Title Regex
+        gpa_required = scholarship.get('gpa_limit')
+        if gpa_required is None:
+            gpa_match = re.search(r'학점\s*(\d+\.\d+|\d+)', scholarship['title'])
+            if gpa_match:
+                gpa_required = float(gpa_match.group(1))
 
         # Parse User GPA
         gpa_user = 0.0
@@ -124,23 +134,21 @@ class ScholarshipBrain:
         if gpa_user_match:
             gpa_user = float(gpa_user_match.group(1))
 
-        # Evaluate GPA requirement
         if gpa_required is not None:
             if gpa_user < gpa_required:
                 is_eligible = False
                 diff = round(gpa_required - gpa_user, 2)
-                gaps.append(
-                    f"⚠️ 학점이 {diff}점 부족합니다. "
-                    f"이번 학기에 성적을 조금만 더 보완해서 {gpa_required} 이상을 맞추시면 다음 분기 선발에 바로 지원하실 수 있습니다! 힘내세요! 💪"
-                )
+                gaps.append(f"⚠️ 학점이 {diff}점 부족합니다. (요구: {gpa_required} 이상)")
             else:
                 reasons.append(f"성적 조건 충족 (학점 {gpa_user} >= {gpa_required} 요구)")
 
-        # 3. Parse Income limits from scholarship title (e.g., "지원구간 3구간 이하")
-        income_required = None
-        income_match = re.search(r'(지원구간|소득\s*분위|분위|구간)\s*(\d+)', scholarship['title'])
-        if income_match:
-            income_required = int(income_match.group(2))
+        # 3. Income Requirement logic
+        # Priority: Structured DB field -> Title Regex
+        income_required = scholarship.get('income_limit')
+        if income_required is None:
+            income_match = re.search(r'(지원구간|소득\s*분위|분위|구간)\s*(\d+)', scholarship['title'])
+            if income_match:
+                income_required = int(income_match.group(2))
 
         # Parse User Income
         income_user = None
@@ -149,58 +157,100 @@ class ScholarshipBrain:
             if income_user_match:
                 income_user = int(income_user_match.group(1))
 
-        # Evaluate Income requirement
         if income_required is not None:
             if income_user is None:
                 is_eligible = False
-                gaps.append(
-                    f"ℹ️ 소득분위 {income_required}구간 이하 조건이 필요하나, 현재 프로필이 '모름'으로 설정되어 있습니다. "
-                    f"한국장학재단 지원구간이 산정되면 프로필 정보를 업데이트하여 신청 가능 여부를 확인해 보세요!"
-                )
+                gaps.append(f"ℹ️ 소득분위 {income_required}구간 이하 조건이 필요하나 현재 프로필이 '모름'입니다.")
             elif income_user > income_required:
                 is_eligible = False
-                gaps.append(
-                    f"⚠️ 소득분위 조건 초과 (요구: {income_required}구간 이하, 내 프로필: {income_user}구간). "
-                    f"만약 가구원 변동 등이 있었다면 최신 소득분위 상태로 프로필을 새로고침해 보세요."
-                )
+                gaps.append(f"⚠️ 소득분위 조건 초과 (요구: {income_required}구간 이하, 내 프로필: {income_user}구간)")
             else:
-                reasons.append(f"소득분위 요건 충족 (내 분위 {income_user} <= {income_required}구간 요구)")
+                reasons.append(f"소득분위 요건 충족 (내 분위 {income_user} <= {income_required}구간)")
+                if income_user <= 3:
+                    score += 15
+                    reasons.append("저소득층 지원 우대 가중치 적용")
+
+        # Confidence Calculation
+        analysis_status = scholarship.get('analysis_status', '제목 분석')
+        is_verified = scholarship.get('is_verified', 0)
+        
+        confidence = 65 # Base confidence for keyword matching
+        if is_verified:
+            confidence = 100
+        elif analysis_status == 'AI 정밀 분석':
+            confidence = 95
+        elif gpa_required is not None or income_required is not None:
+            confidence = 80 # Found specific numbers, higher trust
 
         return {
             "score": score,
             "reasons": reasons,
             "is_eligible": is_eligible,
             "gaps": gaps,
-            "is_potential": (major_matches or location_matches) # Potential close call
+            "is_potential": (major_matches or location_matches),
+            "confidence": confidence,
+            "analysis_status": analysis_status,
+            "is_verified": is_verified
         }
 
     def get_matches(self, user_id):
         user = db.get_user_profile(user_id)
         if not user: 
-            return {"success_matches": [], "gap_matches": []}
+            return {"success_matches": [], "gap_matches": [], "total_potential_amount": 0}
             
         all_scholarships = db.get_all_scholarships()
         success_matches = []
         gap_matches = []
+        total_potential_amount = 0
         
         for sch in all_scholarships:
-            # Skip closed, expired, or verified dead links
-            if sch.get('status') in ['마감', '만료', '비활성']:
+            if sch.get('status') in ['마감', '만료', '비활성'] or sch.get('is_closed') == 1:
                 continue
                 
             analysis = self.calculate_score(user, sch)
+            
+            # Amount estimation (Prioritize enriched data)
+            amount_est = 0
+            if sch.get('benefit_amount'):
+                # Extract numbers from benefit_amount string
+                amount_str = sch['benefit_amount']
+                if '전액' in amount_str:
+                    amount_est = 3500000
+                else:
+                    nums = re.findall(r'(\d+)', amount_str.replace(',', ''))
+                    if nums:
+                        val = int(nums[0])
+                        if '억' in amount_str: val *= 100000000
+                        elif '만' in amount_str or val < 10000: val *= 10000
+                        amount_est = val
+            
+            if amount_est == 0:
+                amount_match = re.search(r'(\d+)만\s*원', sch['title'])
+                if amount_match:
+                    amount_est = int(amount_match.group(1)) * 10000
+                elif '전액' in sch['title']:
+                    amount_est = 3500000
+                else:
+                    amount_est = 500000
+
             item = {
                 "id": sch['id'],
                 "title": sch['title'], 
+                "category": sch['category'],
                 "score": analysis['score'],
                 "reasons": analysis['reasons'], 
                 "link": sch['source'], 
                 "period": sch['period'],
-                "gaps": analysis['gaps']
+                "amount_est": amount_est,
+                "gaps": analysis['gaps'],
+                "confidence": analysis['confidence'],
+                "analysis_status": analysis['analysis_status'],
+                "is_verified": analysis['is_verified']
             }
             
             if analysis['is_eligible'] and analysis['score'] >= 30:
                 success_matches.append(item)
+                total_potential_amount += amount_est
             elif not analysis['is_eligible'] and analysis['is_potential']:
                 gap_matches.append(item)
                 
@@ -210,7 +260,8 @@ class ScholarshipBrain:
         
         return {
             "success_matches": success_matches,
-            "gap_matches": gap_matches
+            "gap_matches": gap_matches,
+            "total_potential_amount": total_potential_amount
         }
 
 brain = ScholarshipBrain()

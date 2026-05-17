@@ -1,12 +1,12 @@
-from database import db
-from matching_engine import brain
-from kosaf_scraper import KosafScraper
-from seoul_scraper import SeoulScraper
-from gwangju_scraper import GwangjuScraper
-from dreamspon_scraper import DreamsponScraper
-from regional_aggregator import RegionalAggregatorScraper
-from document_analyzer import analyzer
-from auto_applier import applier
+from core.database import db
+from core.matching_engine import brain
+from scrapers.kosaf_scraper import KosafScraper
+from scrapers.seoul_scraper import SeoulScraper
+from scrapers.gwangju_scraper import GwangjuScraper
+from scrapers.dreamspon_scraper import DreamsponScraper
+from scrapers.regional_aggregator import RegionalAggregatorScraper
+from core.document_analyzer import analyzer
+from core.auto_applier import applier
 
 def get_user_and_matches(user_id: str):
     user = db.get_user_profile(user_id)
@@ -57,7 +57,16 @@ async def refresh_scholarship_data():
         print(f"Error running RegionalAggregatorScraper: {e}")
         
     db.save_scholarships(results)
-    return f"{len(results)}건의 신규 공고가 업데이트되었습니다."
+    
+    # 6. Run AI Enrichment for newly collected data
+    try:
+        from scripts.ai_enrichment import enrich_scholarships
+        # Process up to 30 items to stay within reasonable limits during auto-refresh
+        await enrich_scholarships(limit=30)
+    except Exception as e:
+        print(f"Error during auto-enrichment: {e}")
+        
+    return f"{len(results)}건의 신규 공고가 업데이트 및 AI 정밀 분석되었습니다."
 
 async def extract_notice_full_text(scholarship_id: int):
     # Retrieve scholarship by id

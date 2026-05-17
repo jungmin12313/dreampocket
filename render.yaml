@@ -3,7 +3,7 @@ services:
     name: dreampocket
     env: python
     buildCommand: pip install -r requirements.txt && playwright install chromium && playwright install-deps chromium
-    startCommand: gunicorn app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
+    startCommand: gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
@@ -13,5 +13,5 @@ services:
         value: utf-8
     disk:
       name: scholarship-db
-      mountPath: /opt/render/project/src
+      mountPath: /opt/render/project/src/data
       sizeGB: 1

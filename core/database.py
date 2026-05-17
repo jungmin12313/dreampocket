@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 
 class ScholarshipDB:
-    def __init__(self, db_name="antigravity_bot.db"):
+    def __init__(self, db_name="data/antigravity_bot.db"):
         self.conn = sqlite3.connect(db_name, check_same_thread=False)
         self.create_tables()
 
@@ -34,9 +34,35 @@ class ScholarshipDB:
                 status TEXT,
                 source TEXT,
                 collected_at TIMESTAMP,
+                gpa_limit REAL,
+                income_limit INTEGER,
+                is_verified INTEGER DEFAULT 0,
+                analysis_status TEXT DEFAULT '제목 분석',
+                last_health_check TIMESTAMP,
                 UNIQUE(title, period)
             )
         ''')
+        
+        # Add new columns if they don't exist (Migration)
+        new_columns = [
+            ('gpa_limit', 'REAL'),
+            ('income_limit', 'INTEGER'),
+            ('is_verified', 'INTEGER DEFAULT 0'),
+            ('analysis_status', "TEXT DEFAULT '제목 분석'"),
+            ('last_health_check', 'TIMESTAMP'),
+            ('major_restriction', 'TEXT'),
+            ('region_restriction', 'TEXT'),
+            ('benefit_type', 'TEXT'),
+            ('benefit_amount', 'TEXT'),
+            ('application_link', 'TEXT'),
+            ('is_closed', 'INTEGER DEFAULT 0')
+        ]
+        for col_name, col_type in new_columns:
+            try:
+                cursor.execute(f'ALTER TABLE scholarships ADD COLUMN {col_name} {col_type}')
+            except sqlite3.OperationalError:
+                pass # Column already exists
+
         
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS notified_scholarships (
@@ -67,10 +93,23 @@ class ScholarshipDB:
         for item in scholarship_list:
             try:
                 cursor.execute('''
-                    INSERT OR IGNORE INTO scholarships (category, title, period, status, source, collected_at)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (item['category'], item['title'], item['period'], 
-                      item['status'], item['source'], item['collected_at']))
+                    INSERT OR IGNORE INTO scholarships (
+                        category, title, period, status, source, collected_at,
+                        gpa_limit, income_limit, is_verified, analysis_status, last_health_check,
+                        major_restriction, region_restriction, benefit_type, benefit_amount, 
+                        application_link, is_closed
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    item.get('category'), item.get('title'), item.get('period'), 
+                    item.get('status'), item.get('source'), item.get('collected_at'),
+                    item.get('gpa_limit'), item.get('income_limit'), 
+                    item.get('is_verified', 0), item.get('analysis_status', '제목 분석'),
+                    item.get('last_health_check', datetime.now()),
+                    item.get('major_restriction'), item.get('region_restriction'),
+                    item.get('benefit_type'), item.get('benefit_amount'),
+                    item.get('application_link'), item.get('is_closed', 0)
+                ))
             except Exception as e:
                 print(f"Error saving scholarship: {e}")
         self.conn.commit()
@@ -102,6 +141,47 @@ class ScholarshipDB:
         cursor.execute('SELECT user_id, gpa, income, location, major, subscribed FROM users WHERE subscribed = 1')
         columns = [column[0] for column in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    def update_enriched_scholarship(self, scholarship_id, data):
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            UPDATE scholarships 
+            SET gpa_limit = ?, 
+                income_limit = ?, 
+                major_restriction = ?, 
+                region_restriction = ?, 
+                benefit_type = ?, 
+                benefit_amount = ?, 
+                application_link = ?, 
+                is_closed = ?,
+                analysis_status = ?,
+                is_verified = ?,
+                last_health_check = ?
+            WHERE id = ?
+        ''', (
+            data.get('gpa_limit'),
+            data.get('income_limit'),
+            data.get('major_restriction'),
+            data.get('region_restriction'),
+            data.get('benefit_type'),
+            data.get('benefit_amount'),
+            data.get('application_link'),
+            1 if data.get('is_closed') else 0,
+            'AI 정밀 분석',
+            1,
+            datetime.now().isoformat(),
+            scholarship_id
+        ))
+        self.conn.commit()
+
+    def update_scholarship_status(self, scholarship_id, status):
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            UPDATE scholarships 
+            SET status = ?, last_health_check = ? 
+            WHERE id = ?
+        ''', (status, datetime.now().isoformat(), scholarship_id))
+        self.conn.commit()
 
     def get_all_scholarships(self):
         cursor = self.conn.cursor()

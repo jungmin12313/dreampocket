@@ -1,4 +1,4 @@
-from database import db
+from core.database import db
 
 def main():
     print("Database check:")

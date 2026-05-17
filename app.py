@@ -2,25 +2,91 @@ import os
 import json
 import re
 import random
+import threading
+import time
 from datetime import datetime
 from functools import wraps
 from flask import Flask, render_template, request, jsonify, Response
 from dotenv import load_dotenv
-from database import db
-from matching_engine import brain
+from core.database import db
+from core.matching_engine import brain
 
-# Load environment variables from .env (로컬 개발용)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
+
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(24).hex())
 
-# --------------------------------------------------------
-# Admin HTTP Basic Auth
-# --------------------------------------------------------
+# Security: Content Security Policy and HTTPS enforcement
+# Allow FontAwesome and Google Fonts
+csp = {
+    'default-src': '\'self\'',
+    'font-src': [
+        '\'self\'',
+        'fonts.gstatic.com',
+        'cdnjs.cloudflare.com'
+    ],
+    'style-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        'fonts.googleapis.com',
+        'cdnjs.cloudflare.com'
+    ],
+    'script-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        'cdnjs.cloudflare.com'
+    ],
+    'img-src': ['\'self\'', 'data:', 'https:']
+}
+talisman = Talisman(app, content_security_policy=csp, force_https=os.environ.get("FLASK_ENV") == "production")
+
+# API Rate Limiting
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
+
+# Admin Auth check
 def check_admin_auth(username, password):
     correct_user = os.environ.get("ADMIN_USERNAME", "admin")
-    correct_pass = os.environ.get("ADMIN_PASSWORD", "changeme")
-    return username == correct_user and password == correct_pass
+    correct_pass = os.environ.get("ADMIN_PASSWORD")
+    
+    # SECURITY: In production, do not allow default password
+    if os.environ.get("FLASK_ENV") == "production" and (not correct_pass or correct_pass == "changeme"):
+        print("[CRITICAL SECURITY] Production password is not set or using default! Access blocked.")
+        return False
+        
+    return username == correct_user and password == (correct_pass or "changeme")
+
+# Simulated ad revenue persistence file
+AD_STATS_FILE = "data/ad_stats.json"
+
+def load_ad_stats():
+    if os.path.exists(AD_STATS_FILE):
+        try:
+            with open(AD_STATS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                # Ensure all keys exist
+                for key in ["impressions", "clicks", "revenue"]:
+                    if key not in data: data[key] = 0
+                return data
+        except Exception:
+            pass
+    return {"impressions": 0, "clicks": 0, "revenue": 0}
+
+def save_ad_stats(stats):
+    try:
+        with open(AD_STATS_FILE, "w", encoding="utf-8") as f:
+            json.dump(stats, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error saving ad stats: {e}")
 
 def admin_required(f):
     @wraps(f)
@@ -34,25 +100,6 @@ def admin_required(f):
             )
         return f(*args, **kwargs)
     return decorated
-
-# Simulated ad revenue persistence file
-AD_STATS_FILE = "ad_stats.json"
-
-def load_ad_stats():
-    if os.path.exists(AD_STATS_FILE):
-        try:
-            with open(AD_STATS_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {"impressions": 0, "clicks": 0, "revenue": 0}
-
-def save_ad_stats(stats):
-    try:
-        with open(AD_STATS_FILE, "w", encoding="utf-8") as f:
-            json.dump(stats, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        print(f"Error saving ad stats: {e}")
 
 # Routes
 
@@ -204,14 +251,35 @@ def match_scholarships():
                 "reasons": analysis["reasons"],
                 "link": sch["source"],
                 "period": sch["period"],
-                "gaps": analysis["gaps"]
+                "gaps": analysis["gaps"],
+                "confidence": analysis["confidence"],
+                "analysis_status": analysis["analysis_status"],
+                "is_verified": analysis["is_verified"]
             }
 
-            # If eligible and score is high enough (at least 40 or category match)
-            if analysis["is_eligible"] and analysis["score"] >= 40:
+            # If eligible and score is high enough (at least 30 or category match)
+            if analysis["is_eligible"] and analysis["score"] >= 30:
                 success_matches.append(item)
             elif not analysis["is_eligible"] and analysis["is_potential"]:
                 gap_matches.append(item)
+
+        # Calculate total potential benefit amount
+        total_potential_amount = 0
+        for item in success_matches:
+            # Simple amount estimation from title
+            amount_est = 0
+            amount_match = re.search(r'(\d+)만\s*원', item['title'])
+            if amount_match:
+                amount_est = int(amount_match.group(1)) * 10000
+            elif '전액' in item['title']:
+                amount_est = 3500000 # Avg tuition
+            elif '생활비' in item['title']:
+                amount_est = 1000000
+            else:
+                amount_est = 500000 # Default
+            
+            item['amount_est'] = amount_est
+            total_potential_amount += amount_est
 
         # Sort descending by score
         success_matches = sorted(success_matches, key=lambda x: x["score"], reverse=True)
@@ -222,7 +290,8 @@ def match_scholarships():
             "user_profile": user_profile,
             "results": {
                 "success_matches": success_matches,
-                "gap_matches": gap_matches
+                "gap_matches": gap_matches,
+                "total_potential_amount": total_potential_amount
             }
         })
     except Exception as e:
@@ -252,6 +321,7 @@ def record_click():
     })
 
 @app.route("/api/ad-reset", methods=["POST"])
+@admin_required
 def reset_ad_stats():
     stats = {"impressions": 0, "clicks": 0, "revenue": 0}
     save_ad_stats(stats)
@@ -265,7 +335,7 @@ def run_auto_refresh():
     while True:
         print("[Auto-Refresh Daemon] Starting background scholarship list crawl...")
         try:
-            from agent_tools import refresh_scholarship_data
+            from core.agent_tools import refresh_scholarship_data
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             result = loop.run_until_complete(refresh_scholarship_data())
@@ -277,28 +347,20 @@ def run_auto_refresh():
         # Sleep for 12 hours (43200 seconds) before repeating
         time.sleep(43200)
 
+# Ensure necessary directories exist
+os.makedirs("data", exist_ok=True)
+os.makedirs("templates", exist_ok=True)
+os.makedirs("static/css", exist_ok=True)
+os.makedirs("static/js", exist_ok=True)
+
+# Start auto-refresh daemon in background
+daemon = threading.Thread(target=run_auto_refresh, daemon=True)
+daemon.start()
+
 if __name__ == "__main__":
-    # Ensure templates and static directories exist
-    os.makedirs("templates", exist_ok=True)
-    os.makedirs("static/css", exist_ok=True)
-    os.makedirs("static/js", exist_ok=True)
-    
     # Determine environment
     is_production = os.environ.get("FLASK_ENV") == "production"
     port = int(os.environ.get("PORT", 5000))
-    
-    # Start auto-refresh daemon thread (only once - avoid double launch in debug mode)
-    if not is_production and os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        import threading
-        refresh_thread = threading.Thread(target=run_auto_refresh, daemon=True)
-        refresh_thread.start()
-        print("[Auto-Refresh Daemon] Background auto-crawler schedule initialized (Runs every 12 hours).")
-    elif is_production:
-        # In production (gunicorn), start daemon directly
-        import threading
-        refresh_thread = threading.Thread(target=run_auto_refresh, daemon=True)
-        refresh_thread.start()
-        print("[Auto-Refresh Daemon] Production auto-crawler initialized.")
     
     print(f"Starting DreamPocket on port {port} | Production={is_production}")
     app.run(host="0.0.0.0", port=port, debug=not is_production)

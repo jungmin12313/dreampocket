@@ -1,6 +1,6 @@
 import asyncio
 import sys
-from agent_tools import refresh_scholarship_data
+from core.agent_tools import refresh_scholarship_data
 
 async def main():
     print("Refreshing scholarship data...")

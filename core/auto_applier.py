@@ -1,6 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
-from database import db
+from core.database import db
 
 class ScholarshipApplier:
     async def fill_application_form(self, user_id: str, notice_url: str):

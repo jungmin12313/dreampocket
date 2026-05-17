@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
+    <!-- SVG Gradient Definition for Gauges -->
+    <svg width="0" height="0" style="position:absolute;">
+        <defs>
+            <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
 
     <!-- Stars Particles background -->
     <div class="stars-bg"></div>
@@ -116,14 +125,24 @@
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <h2 class="step-question">현재 기준 직전 학기 학점은 어떻게 되나요?</h2>
-                        <p class="step-desc">본인의 평균 평점(4.5 만점 기준)을 조절해 주세요.</p>
+                        <p class="step-desc">본인의 평균 평점과 <strong>만점 기준(4.5/4.3/4.0)</strong>을 선택해 주세요.</p>
                         
                         <div class="gpa-interactive-box">
+                            <div class="gpa-scale-selector">
+                                <button type="button" class="scale-btn active" data-scale="4.5">4.5</button>
+                                <button type="button" class="scale-btn" data-scale="4.3">4.3</button>
+                                <button type="button" class="scale-btn" data-scale="4.0">4.0</button>
+                            </div>
                             <div class="gpa-slider-container">
                                 <input type="range" class="gpa-slider" id="gpa-input" min="0.0" max="4.5" step="0.1" value="3.5">
                                 <div class="gpa-slider-track-fill"></div>
                             </div>
                             <div class="gpa-value-display" id="gpa-val">3.50 / 4.5</div>
+                        </div>
+
+                        <div class="privacy-assurance">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>입력하신 정보는 저장되지 않으며 실시간 매칭에만 사용됩니다.</span>
                         </div>
                     </div>
 
@@ -133,7 +152,7 @@
                             <i class="fa-solid fa-hand-holding-dollar"></i>
                         </div>
                         <h2 class="step-question">가구의 소득구간(소득분위)은 몇 분위인가요?</h2>
-                        <p class="step-desc">한국장학재단 소득 연계 분위 기준이며, 터치 시 자동으로 다음 단계로 넘어갑니다.</p>
+                        <p class="step-desc">내 구간을 잘 모르겠다면? <a href="#" id="open-income-modal" class="guide-link">구간별 소득 기준 확인 <i class="fa-solid fa-circle-question"></i></a></p>
                         
                         <div class="income-step-wrapper">
                             <div class="btn-grid">
@@ -261,15 +280,16 @@
                     <span>조건 수정</span>
                 </button>
                 
-                <div class="header-summary-badge">
-                    <div class="summary-item">
-                        <span class="label">전체 보유 공고</span>
-                        <span class="val" id="total-sch-count">0</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="label">최근 정보 갱신</span>
-                        <span class="val" id="last-update-time">로딩 중...</span>
-                    </div>
+                <div class="match-summary-hero-banner">
+                    <span class="summary-hero-label">내 드림포켓 수혜 가능 총액</span>
+                    <div class="summary-hero-val" id="total-potential-amount">0원</div>
+                </div>
+
+                <div class="header-actions">
+                    <button type="button" class="share-action-btn" id="share-link-btn">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>결과 공유</span>
+                    </button>
                 </div>
             </div>
 
