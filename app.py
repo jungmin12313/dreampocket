@@ -196,6 +196,45 @@ def scholarship_detail(sch_id):
 def admin():
     return render_template("admin.html")
 
+@app.route("/api/admin/refresh", methods=["POST"])
+@admin_required
+def trigger_refresh():
+    import asyncio
+    try:
+        from core.agent_tools import refresh_scholarship_data
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+        if loop.is_running():
+            import threading
+            result_container = {}
+            def run_in_thread():
+                new_loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(new_loop)
+                try:
+                    result_container["result"] = new_loop.run_until_complete(refresh_scholarship_data())
+                    result_container["success"] = True
+                except Exception as e:
+                    result_container["error"] = str(e)
+                    result_container["success"] = False
+                finally:
+                    new_loop.close()
+            t = threading.Thread(target=run_in_thread)
+            t.start()
+            t.join()
+            if result_container.get("success"):
+                return jsonify({"success": True, "message": result_container["result"]})
+            else:
+                return jsonify({"success": False, "error": result_container.get("error", "Unknown error")}), 500
+        else:
+            result = loop.run_until_complete(refresh_scholarship_data())
+            return jsonify({"success": True, "message": result})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
