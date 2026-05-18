@@ -9,7 +9,10 @@ class DocumentAnalyzer:
             return "유효한 공고 URL이 없습니다."
             
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+            )
             page = await browser.new_page()
             # Set a common User-Agent to avoid issues
             await page.set_extra_http_headers({

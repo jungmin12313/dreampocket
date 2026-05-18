@@ -6,7 +6,10 @@ from core.database import db
 class KosafScraper:
     async def fetch_scholarship_list(self):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+            )
             page = await browser.new_page()
             # Set a transparent User-Agent showing we are DreamPocket's friendly bot
             await page.set_extra_http_headers({
