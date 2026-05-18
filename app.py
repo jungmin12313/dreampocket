@@ -246,37 +246,45 @@ def terms():
 @app.route("/api/health-check", methods=["GET"])
 def health_check():
     import os
-    all_schs = db.get_all_scholarships()
-    count = len(all_schs)
-    
-    # If the database has 0 scholarships, trigger a background crawl thread immediately!
-    triggered = False
-    if count == 0:
-        import threading
-        import asyncio
-        from core.agent_tools import refresh_scholarship_data
+    import traceback
+    try:
+        all_schs = db.get_all_scholarships()
+        count = len(all_schs)
         
-        def run_crawl_once():
-            new_loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(new_loop)
-            try:
-                print("[Health Check Diagnostics] Force-triggering crawl since database is empty...")
-                new_loop.run_until_complete(refresh_scholarship_data())
-            except Exception as e:
-                print(f"[Health Check Diagnostics] Error running force crawl: {e}")
-            finally:
-                new_loop.close()
-                
-        threading.Thread(target=run_crawl_once, daemon=True).start()
-        triggered = True
-        
-    return jsonify({
-        "status": "healthy",
-        "database_file": "data/antigravity_bot.db",
-        "database_exists": os.path.exists("data/antigravity_bot.db"),
-        "scholarship_count": count,
-        "crawling_triggered": triggered
-    })
+        # If the database has 0 scholarships, trigger a background crawl thread immediately!
+        triggered = False
+        if count == 0:
+            import threading
+            import asyncio
+            from core.agent_tools import refresh_scholarship_data
+            
+            def run_crawl_once():
+                new_loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(new_loop)
+                try:
+                    print("[Health Check Diagnostics] Force-triggering crawl since database is empty...")
+                    new_loop.run_until_complete(refresh_scholarship_data())
+                except Exception as e:
+                    print(f"[Health Check Diagnostics] Error running force crawl: {e}")
+                finally:
+                    new_loop.close()
+                    
+            threading.Thread(target=run_crawl_once, daemon=True).start()
+            triggered = True
+            
+        return jsonify({
+            "status": "healthy",
+            "database_file": "data/antigravity_bot.db",
+            "database_exists": os.path.exists("data/antigravity_bot.db"),
+            "scholarship_count": count,
+            "crawling_triggered": triggered
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
 
 @app.route("/api/stats", methods=["GET"])
 def get_stats():
