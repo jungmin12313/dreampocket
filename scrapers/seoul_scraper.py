@@ -10,9 +10,9 @@ class SeoulScraper:
                 browser = await p.chromium.launch(headless=True)
                 page = await browser.new_page()
                 
-                # Set common headers to prevent blocking
+                # Set a transparent User-Agent showing we are DreamPocket's friendly bot
                 await page.set_extra_http_headers({
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 (DreamPocket Scholarship Matcher Bot; Contact: dreampocket.official@gmail.com)"
                 })
                 
                 # Target the general board URL for notices
