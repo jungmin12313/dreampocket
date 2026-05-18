@@ -1,5 +1,5 @@
 # 1. Playwright와 시스템 브라우저 패키지가 사전 설치된 공식 Python 이미지 사용
-FROM mcr.microsoft.com/playwright/python:v1.40.0-jammy
+FROM mcr.microsoft.com/playwright/python:v1.50.0-jammy
 
 # 2. 작업 디렉토리 설정
 WORKDIR /app
