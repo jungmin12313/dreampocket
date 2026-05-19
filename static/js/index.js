@@ -418,6 +418,41 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------------------------------------------------
     // Dynamic Listings Rendering & Animations
     // ----------------------------------------------------
+    function calculateDDay(periodStr) {
+        if (!periodStr) return '';
+        // Extract the end date from formats like "YYYY-MM-DD ~ YYYY-MM-DD" or "YYYY.MM.DD"
+        const parts = periodStr.split('~');
+        let endStr = parts.length > 1 ? parts[1].trim() : parts[0].trim();
+        
+        // Safely extract YYYY-MM-DD, YYYY.MM.DD, or YYYY/MM/DD
+        const dateMatch = endStr.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+        if (!dateMatch) return '';
+        
+        const year = parseInt(dateMatch[1]);
+        const month = parseInt(dateMatch[2]) - 1; // JS months are 0-indexed
+        const day = parseInt(dateMatch[3]);
+        
+        const endDate = new Date(year, month, day);
+        if (isNaN(endDate.getTime())) return '';
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+        
+        const diffTime = endDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 0) {
+            return `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">마감</span>`;
+        } else if (diffDays === 0) {
+            return `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-Day</span>`;
+        } else if (diffDays <= 7) {
+            return `<span class="d-day-tag" style="background-color: #f97316; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
+        } else {
+            return `<span class="d-day-tag" style="background-color: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
+        }
+    }
+
     function animateValue(obj, start, end, duration) {
         let startTimestamp = null;
         const step = (timestamp) => {
@@ -503,10 +538,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="card-main">
                             <div class="trust-badge-row">
                                 <span class="category-tag">${sch.category || '일반'}</span>
-                                <span class="trust-badge ${confidenceClass}">
-                                    <i class="fa-solid ${sch.is_verified ? 'fa-circle-check' : 'fa-robot'}"></i>
-                                    ${sch.analysis_status} (${sch.confidence}%)
-                                </span>
+                                ${calculateDDay(sch.period)}
                             </div>
                             <h3 class="sch-title">${sch.title}</h3>
                             <div class="sch-detail-item">
@@ -546,7 +578,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="scholarship-card gap-card">
                         <div class="card-main">
                             <div class="card-top-row">
-                                <span class="category-tag">${sch.category || '일반'}</span>
+                                <div>
+                                    <span class="category-tag">${sch.category || '일반'}</span>
+                                    ${calculateDDay(sch.period)}
+                                </div>
                                 <span class="match-score-tag" style="background: rgba(245,158,11,0.08); color: var(--warning); border-color: rgba(245,158,11,0.15);">아까운 미달</span>
                             </div>
                             <h3 class="sch-title">${sch.title}</h3>
