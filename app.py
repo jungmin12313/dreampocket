@@ -137,16 +137,31 @@ def major_home(major_name):
 
 @app.route("/robots.txt")
 def robots_txt():
+    host_url = request.url_root.rstrip('/')
+    base_url = os.environ.get("BASE_URL")
+    if not base_url:
+        if "localhost" in host_url or "127.0.0.1" in host_url:
+            base_url = host_url
+        else:
+            base_url = "https://dreampocket.onrender.com"
+            
     lines = [
         "User-agent: *",
         "Allow: /",
-        "Sitemap: https://dreampocket.onrender.com/sitemap.xml"
+        f"Sitemap: {base_url}/sitemap.xml"
     ]
     return Response("\n".join(lines), mimetype="text/plain")
 
 @app.route("/sitemap.xml")
 def sitemap_xml():
-    base_url = "https://dreampocket.onrender.com"
+    host_url = request.url_root.rstrip('/')
+    base_url = os.environ.get("BASE_URL")
+    if not base_url:
+        if "localhost" in host_url or "127.0.0.1" in host_url:
+            base_url = host_url
+        else:
+            base_url = "https://dreampocket.onrender.com"
+            
     urls = []
     
     # Base URL
@@ -166,6 +181,10 @@ def sitemap_xml():
     schs = db.get_all_scholarships()
     for sch in schs:
         urls.append(f"<url><loc>{base_url}/scholarship/{sch['id']}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>")
+        
+    # Legal Pages
+    urls.append(f"<url><loc>{base_url}/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>")
+    urls.append(f"<url><loc>{base_url}/terms</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>")
         
     xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>"
     return Response(xml, mimetype="application/xml")
