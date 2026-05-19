@@ -65,28 +65,7 @@ def check_admin_auth(username, password):
         
     return username == correct_user and password == (correct_pass or "changeme")
 
-# Simulated ad revenue persistence file
-AD_STATS_FILE = "data/ad_stats.json"
 
-def load_ad_stats():
-    if os.path.exists(AD_STATS_FILE):
-        try:
-            with open(AD_STATS_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                # Ensure all keys exist
-                for key in ["impressions", "clicks", "revenue"]:
-                    if key not in data: data[key] = 0
-                return data
-        except Exception:
-            pass
-    return {"impressions": 0, "clicks": 0, "revenue": 0}
-
-def save_ad_stats(stats):
-    try:
-        with open(AD_STATS_FILE, "w", encoding="utf-8") as f:
-            json.dump(stats, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        print(f"Error saving ad stats: {e}")
 
 def admin_required(f):
     @wraps(f)
@@ -334,31 +313,12 @@ def get_stats():
             except Exception:
                 pass
 
-    # 2. Simulated Ad Stats
-    ad_stats = load_ad_stats()
-    
-    # Calculate CTR
-    ctr = 0.0
-    if ad_stats["impressions"] > 0:
-        ctr = round((ad_stats["clicks"] / ad_stats["impressions"]) * 100, 2)
-        
-    # Calculate eCPM (Revenue per 1000 impressions)
-    ecpm = 0.0
-    if ad_stats["impressions"] > 0:
-        ecpm = round((ad_stats["revenue"] / ad_stats["impressions"]) * 1000, 2)
 
     return jsonify({
         "scholarships": {
             "total": total_count,
             "categories": categories,
             "last_updated": last_collected
-        },
-        "ad_stats": {
-            "impressions": ad_stats["impressions"],
-            "clicks": ad_stats["clicks"],
-            "revenue": ad_stats["revenue"],
-            "ctr": ctr,
-            "ecpm": ecpm
         }
     })
 
@@ -461,35 +421,6 @@ def match_scholarships():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route("/api/ad-impression", methods=["POST"])
-def record_impression():
-    stats = load_ad_stats()
-    stats["impressions"] += 1
-    # Add a microscopic CPM revenue (e.g. CPM = 15,000 KRW, meaning 15 KRW per impression)
-    stats["revenue"] += 15
-    save_ad_stats(stats)
-    return jsonify({"success": True, "ad_stats": stats})
-
-@app.route("/api/ad-click", methods=["POST"])
-def record_click():
-    stats = load_ad_stats()
-    stats["clicks"] += 1
-    # Random CPC revenue between 120 KRW and 350 KRW
-    earnings = random.randint(120, 350)
-    stats["revenue"] += earnings
-    save_ad_stats(stats)
-    return jsonify({
-        "success": True, 
-        "earnings": earnings,
-        "ad_stats": stats
-    })
-
-@app.route("/api/ad-reset", methods=["POST"])
-@admin_required
-def reset_ad_stats():
-    stats = {"impressions": 0, "clicks": 0, "revenue": 0}
-    save_ad_stats(stats)
-    return jsonify({"success": True, "ad_stats": stats})
 
 def run_auto_refresh():
     import time

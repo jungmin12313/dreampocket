@@ -11,10 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const mainResetBtn = document.getElementById("main-reset-btn");
 
     // Live Tracking State (To compare increments)
-    let previousStats = {
-        impressions: 0,
-        clicks: 0,
-        revenue: 0
+        let previousStats = {
+        total: 0
     };
 
     let isFirstLoad = true;
@@ -28,10 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const now = new Date();
         const timeStr = now.toTimeString().split(" ")[0];
         
-        if (type === "click") {
-            li.innerHTML = `<span class="time">[${timeStr}]</span> <span class="click-event"><i class="fa-solid fa-fire"></i> <strong>${message}</strong></span>`;
-        } else if (type === "impression") {
-            li.innerHTML = `<span class="time">[${timeStr}]</span> <span style="color: #60a5fa;"><i class="fa-solid fa-eye"></i> ${message}</span>`;
+        if (type === "system") {
+            li.innerHTML = `<span class="time">[${timeStr}]</span> <span style="color: #60a5fa;"><i class="fa-solid fa-server"></i> ${message}</span>`;
         } else {
             li.innerHTML = `<span class="time">[${timeStr}]</span> <span>${message}</span>`;
         }
@@ -51,38 +47,30 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("/api/stats")
             .then(res => res.json())
             .then(data => {
-                const stats = data.ad_stats;
                 const dbStats = data.scholarships;
 
                 // Populate Stats
-                mainRevenue.innerText = `₩${stats.revenue.toLocaleString()}`;
-                mainImpressions.innerText = stats.impressions.toLocaleString();
-                mainClicks.innerText = stats.clicks.toLocaleString();
-                mainCtr.innerText = `${stats.ctr.toFixed(2)}%`;
-                mainEcpm.innerText = `₩${stats.ecpm.toLocaleString()}`;
+                if (mainRevenue) mainRevenue.innerText = dbStats.total;
+                if (mainImpressions) mainImpressions.innerText = dbStats.last_updated;
+                if (mainClicks) mainClicks.innerText = "정상 작동 중";
+                if (mainCtr) mainCtr.innerText = "Connected";
+                if (mainEcpm) mainEcpm.innerText = "0 errors";
 
                 if (isFirstLoad) {
-                    previousStats = { ...stats };
+                    previousStats = { ...dbStats };
                     isFirstLoad = false;
-                    addLogEntry(`Publisher Admin session initialized. Connected to SQLite with ${dbStats.total} scholarship rules.`, "info");
-                    addLogEntry(`Initial State loaded: Revenue ₩${stats.revenue.toLocaleString()}, Impressions ${stats.impressions}, Clicks ${stats.clicks}`, "info");
+                    addLogEntry(`Admin session initialized. Connected to SQLite with ${dbStats.total} scholarship rules.`, "info");
                     return;
                 }
 
                 // Check for Incremental updates (Smart Polling Logs)
-                if (stats.impressions > previousStats.impressions) {
-                    const diff = stats.impressions - previousStats.impressions;
-                    addLogEntry(`Real-time traffic: +${diff} ad impression(s) detected. eCPM Revenue added (+${diff * 15} KRW).`, "impression");
-                }
-
-                if (stats.clicks > previousStats.clicks) {
-                    const diffClicks = stats.clicks - previousStats.clicks;
-                    const diffRev = stats.revenue - previousStats.revenue - ( (stats.impressions - previousStats.impressions) * 15 );
-                    addLogEntry(`Monetization alert: Active banner click detected (+${diffClicks})! Simulated payout: +${diffRev > 0 ? diffRev : 150} KRW.`, "click");
+                if (dbStats.total > previousStats.total) {
+                    const diff = dbStats.total - previousStats.total;
+                    addLogEntry(`Real-time update: +${diff} new scholarships processed.`, "system");
                 }
 
                 // Update previous state reference
-                previousStats = { ...stats };
+                previousStats = { ...dbStats };
             })
             .catch(err => {
                 console.error("Admin stats fetching error:", err);
@@ -94,23 +82,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // Action Events
     // ----------------------------------------------------
     mainResetBtn.addEventListener("click", function () {
-        if (confirm("정말로 모든 가상 광고 수익 및 노출 로그를 공장 초기화하시겠습니까?")) {
-            fetch("/api/ad-reset", { method: "POST" })
+        if (confirm("DB 데이터 크롤링을 수동으로 재요청하시겠습니까? (이 작업은 시스템 리소스를 소모합니다)")) {
+            addLogEntry("System admin command: Force refresh triggered.", "info");
+            fetch("/api/admin/refresh", { method: "POST" })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        const stats = data.ad_stats;
-                        previousStats = { ...stats };
-                        
-                        mainRevenue.innerText = "₩0";
-                        mainImpressions.innerText = "0";
-                        mainClicks.innerText = "0";
-                        mainCtr.innerText = "0.00%";
-                        mainEcpm.innerText = "₩0";
-                        
-                        mainLogFeed.innerHTML = "";
-                        addLogEntry("System admin command: Monetization metrics successfully wiped and reset to 0.", "info");
+                        addLogEntry(`Refresh completed: ${data.message}`, "system");
+                    } else {
+                        addLogEntry(`Refresh failed: ${data.error}`, "warning");
                     }
+                })
+                .catch(err => {
+                    addLogEntry("Force refresh request failed.", "warning");
                 });
         }
     });
