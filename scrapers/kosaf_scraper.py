@@ -30,6 +30,10 @@ class KosafScraper:
                 # Clean up title if there are multiple spaces/newlines
                 title_text = " ".join(title_text.split())
                 
+                irrelevant_keywords = ['결과', '커뮤니티', '발표', '합격자', '수기', '후기', '게시판', '기자단', '서포터즈', '명단', '수여식']
+                if any(kw in title_text for kw in irrelevant_keywords):
+                    continue
+                
                 href = await title_element.get_attribute("href")
                 if href and href.startswith("?"):
                     # Replace HTML entities if any

@@ -411,55 +411,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function bindAdClicks() {
-        const mainAdBanner = document.getElementById("main-ad-banner");
-        if (!mainAdBanner) return;
-
-        // Ad rotations
-        const adsList = [
-            {
-                title: "신한은행 청년 우대형 청약통장 (최고 연 4.5% + 스타벅스 쿠폰 100% 증정)",
-                desc: "드림포켓 대학생 독점 혜택! 지금 가입하고 숨은 현금 지원금 5만원 캐시백 혜택도 받아보세요.",
-                link: "https://www.shinhan.com"
-            },
-            {
-                title: "토스(Toss) 숨은 청년 금융 지원금 찾기 (매일 즉시 리워드 제공)",
-                desc: "내가 아직 신청하지 않은 국가 및 지자체 청년 수당/환급금을 토스에서 10초 만에 확인해 보세요.",
-                link: "https://toss.im"
-            },
-            {
-                title: "해커스 토익 인강 0원 프리패스 (대학생 20% 단독 할인가)",
-                desc: "이번 방학 토익 고득점 확실한 보장! 출석 미션 성공 시 수강료 100% 현금 전액 환불!",
-                link: "https://www.hackers.com"
-            }
-        ];
-
-        // Pick random ad
-        const selectedAd = adsList[Math.floor(Math.random() * adsList.length)];
-        
-        // Update UI
-        const titleEl = document.getElementById("ad-banner-title");
-        const descEl = document.getElementById("ad-banner-desc");
-        if (titleEl) titleEl.innerText = selectedAd.title;
-        if (descEl) descEl.innerText = selectedAd.desc;
-
-        // Record impression
-        fetch("/api/ad-impression", { method: "POST" })
-            .then(res => res.json())
-            .then(data => {
-                console.log("[Ad System] Simulated Impression logged.", data.ad_stats);
-            })
-            .catch(err => console.error("Ad impression failed:", err));
-
-        // Bind click event
-        mainAdBanner.onclick = function() {
-            fetch("/api/ad-click", { method: "POST" })
-                .then(res => res.json())
-                .then(data => {
-                    showToast(`스폰서 혜택 클릭! ₩${data.earnings}원 수익 적립 완료 (광고 시뮬레이션)`, true);
-                    window.open(selectedAd.link, "_blank");
-                })
-                .catch(err => console.error("Ad click failed:", err));
-        };
+        // Disabled ad simulation logic for frontend per admin request
+        return;
     }
 
     // ----------------------------------------------------

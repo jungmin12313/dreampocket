@@ -53,6 +53,11 @@ class DreamsponScraper:
                     # Clean whitespaces
                     title_clean = " ".join(title_clean.split())
                     
+                    # Filter out irrelevant posts (results, community, announcements)
+                    irrelevant_keywords = ['결과', '커뮤니티', '발표', '합격자', '수기', '후기', '게시판', '기자단', '서포터즈', '명단', '수여식']
+                    if any(kw in title_clean for kw in irrelevant_keywords):
+                        continue
+                    
                     # Complete relative URL
                     if href:
                         source_url = href if href.startswith("http") else f"https://www.dreamspon.com{href}"
