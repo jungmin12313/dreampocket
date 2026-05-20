@@ -424,39 +424,44 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------------------------------------------------
     // Dynamic Listings Rendering & Animations
     // ----------------------------------------------------
-    function calculateDDay(periodStr) {
-        if (!periodStr) return '';
-        // Extract the end date from formats like "YYYY-MM-DD ~ YYYY-MM-DD" or "YYYY.MM.DD"
+    // Returns { diffDays, html } — diffDays = null if date unparseable
+    function parseDDay(periodStr) {
+        if (!periodStr) return { diffDays: null, html: '' };
         const parts = periodStr.split('~');
         let endStr = parts.length > 1 ? parts[1].trim() : parts[0].trim();
-        
-        // Safely extract YYYY-MM-DD, YYYY.MM.DD, or YYYY/MM/DD
         const dateMatch = endStr.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
-        if (!dateMatch) return '';
-        
+        if (!dateMatch) return { diffDays: null, html: '' };
         const year = parseInt(dateMatch[1]);
-        const month = parseInt(dateMatch[2]) - 1; // JS months are 0-indexed
+        const month = parseInt(dateMatch[2]) - 1;
         const day = parseInt(dateMatch[3]);
-        
         const endDate = new Date(year, month, day);
-        if (isNaN(endDate.getTime())) return '';
-        
+        if (isNaN(endDate.getTime())) return { diffDays: null, html: '' };
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         endDate.setHours(0, 0, 0, 0);
-        
         const diffTime = endDate - today;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+        let html = '';
         if (diffDays < 0) {
-            return `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">마감</span>`;
+            html = `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">마감</span>`;
         } else if (diffDays === 0) {
-            return `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-Day</span>`;
+            html = `<span class="d-day-tag" style="background-color: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-Day</span>`;
         } else if (diffDays <= 7) {
-            return `<span class="d-day-tag" style="background-color: #f97316; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
+            html = `<span class="d-day-tag" style="background-color: #f97316; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
         } else {
-            return `<span class="d-day-tag" style="background-color: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
+            html = `<span class="d-day-tag" style="background-color: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 6px;">D-${diffDays}</span>`;
         }
+        return { diffDays, html };
+    }
+
+    function calculateDDay(periodStr) {
+        return parseDDay(periodStr).html;
+    }
+
+    // 대출 관련 키워드
+    const LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보'];
+    function isLoanRelated(title) {
+        return LOAN_KEYWORDS.some(k => title.includes(k));
     }
 
     function animateValue(obj, start, end, duration) {
@@ -493,22 +498,133 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("share-link-btn").addEventListener("click", shareResults);
 
+    // MATCH 점수 구성 설명 (툴팁용)
+    const MATCH_SCORE_BREAKDOWN = [
+        { label: '기본 매칭 점수', score: '+20', desc: '모든 공고에 부여되는 기본 점수' },
+        { label: '전공 분야 일치', score: '+45', desc: '내 전공과 공고 대상 전공이 매칭될 때' },
+        { label: '거주 지역 일치', score: '+30', desc: '내 거주지와 공고 대상 지역이 정확히 일치할 때' },
+        { label: '수도권 교차 지원', score: '+15', desc: '서울/경기/인천 수도권 교차 지원 허용 공고' },
+        { label: '전국구 공고', score: '+15', desc: '지역 제한 없이 전국 어디서나 신청 가능한 공고' },
+        { label: '국가 장학금 가산', score: '+15', desc: '한국장학재단 등 국가 지원 공신력 가산' },
+        { label: '지역 장학금 가산', score: '+12', desc: '지자체 특화 장학금 지역 연고 우대 가산' },
+        { label: '민간 장학금 가산', score: '+5', desc: '기업/재단 민간 장학금 가산' },
+        { label: '저소득층 우대', score: '+15', desc: '소득분위 3구간 이하 저소득 우대 장학금 가산' },
+    ];
+
+    function buildMatchTooltip() {
+        return MATCH_SCORE_BREAKDOWN.map(item =>
+            `<div class="match-tip-row"><span class="match-tip-label">${item.label}</span><span class="match-tip-score">${item.score}점</span><span class="match-tip-desc">${item.desc}</span></div>`
+        ).join('');
+    }
+
     function renderResults(results) {
-        const successes = results.success_matches || [];
-        const gaps = results.gap_matches || [];
-        const totalAmount = results.total_potential_amount || 0;
+        let successes = results.success_matches || [];
+        let gaps = results.gap_matches || [];
+
+        // ──────────────────────────────────────────────
+        // 1. 대출 관련 장학금 제거
+        // ──────────────────────────────────────────────
+        successes = successes.filter(sch => !isLoanRelated(sch.title));
+        gaps = gaps.filter(sch => !isLoanRelated(sch.title));
+
+        // ──────────────────────────────────────────────
+        // 2. 마감 장학금 처리: success → gaps 이동, 7일 초과 마감은 완전 제거
+        // ──────────────────────────────────────────────
+        const stillActiveSuccesses = [];
+        const movedToGaps = [];
+
+        successes.forEach(sch => {
+            const { diffDays } = parseDDay(sch.period);
+            if (diffDays !== null) {
+                if (diffDays < 0) {
+                    // 마감됨 → 7일 이내 마감이면 gaps로 이동, 그 이상이면 제거
+                    const daysAgo = Math.abs(diffDays);
+                    if (daysAgo <= 7) {
+                        // 7일 이내 마감된 공고 → gaps 탭으로 이동
+                        movedToGaps.push({ ...sch, _movedFromSuccess: true });
+                    }
+                    // 7일 초과 마감 → 완전 제거 (아무것도 하지 않음)
+                } else {
+                    stillActiveSuccesses.push(sch);
+                }
+            } else {
+                // 기간 파싱 불가 → 유효한 것으로 간주
+                stillActiveSuccesses.push(sch);
+            }
+        });
+
+        // gaps도 7일 초과 마감 제거
+        const filteredGaps = gaps.filter(sch => {
+            const { diffDays } = parseDDay(sch.period);
+            if (diffDays !== null && diffDays < -7) return false; // 7일 초과 마감 제거
+            return true;
+        });
+
+        // 마감된 success 공고를 gaps 앞에 추가
+        const allGaps = [...movedToGaps, ...filteredGaps];
+
+        // ──────────────────────────────────────────────
+        // 3. 정렬: 점수 내림차순 → 마감 임박 순 (D-day 오름차순)
+        // ──────────────────────────────────────────────
+        function sortScholarships(list) {
+            return list.sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                const dA = parseDDay(a.period).diffDays;
+                const dB = parseDDay(b.period).diffDays;
+                if (dA === null && dB === null) return 0;
+                if (dA === null) return 1;
+                if (dB === null) return -1;
+                // D-day가 작은(임박한) 것 우선, 단 마감된 것(음수)은 뒤로
+                if (dA >= 0 && dB >= 0) return dA - dB;
+                if (dA >= 0) return -1;
+                if (dB >= 0) return 1;
+                return dB - dA;
+            });
+        }
+
+        sortScholarships(stillActiveSuccesses);
+        sortScholarships(allGaps);
+
+        // ──────────────────────────────────────────────
+        // 4. 보수적 수혜 가능 총액 계산
+        //    - 금액이 명시된 공고 또는 is_verified인 공고만 합산
+        //    - 기본값(500,000원) 공고는 제외하여 과대평가 방지
+        // ──────────────────────────────────────────────
+        let conservativeTotal = 0;
+        stillActiveSuccesses.forEach(sch => {
+            const amt = sch.amount_est || 0;
+            // 명시된 금액이 있는 경우만 합산 (기본값 500,000 제외)
+            if (amt > 0 && amt !== 500000) {
+                conservativeTotal += amt;
+            }
+        });
 
         // Update counts
-        successBadge.innerText = successes.length;
-        gapsBadge.innerText = gaps.length;
+        successBadge.innerText = stillActiveSuccesses.length;
+        gapsBadge.innerText = allGaps.length;
 
-        // Animate total potential amount
+        // Animate total potential amount (보수적 총액)
         const totalAmountDisplay = document.getElementById("total-potential-amount");
-        animateValue(totalAmountDisplay, 0, totalAmount, 1000);
+        animateValue(totalAmountDisplay, 0, conservativeTotal, 1000);
 
-        // Render success matches
-        if (successes.length === 0) {
+        // ──────────────────────────────────────────────
+        // 정렬 기준 안내 배너
+        // ──────────────────────────────────────────────
+        const sortInfoHtml = `
+            <div class="sort-info-banner">
+                <i class="fa-solid fa-arrow-up-wide-short"></i>
+                <span>정렬 기준: <strong>MATCH 점수 높은 순</strong> → <strong>마감 임박 순</strong> (장학금·전공장학금·민간장학금 통합 적용)</span>
+            </div>
+        `;
+
+        // ──────────────────────────────────────────────
+        // 5. 성공 카드 렌더링
+        // ──────────────────────────────────────────────
+        const tooltipHtml = buildMatchTooltip();
+
+        if (stillActiveSuccesses.length === 0) {
             successList.innerHTML = `
+                ${sortInfoHtml}
                 <div class="empty-state">
                     <div class="empty-icon">😢</div>
                     <div class="empty-title">매칭된 우수 장학금이 없습니다</div>
@@ -516,36 +632,39 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
         } else {
-            let html = "";
-            successes.forEach((sch, idx) => {
+            let html = sortInfoHtml;
+            stillActiveSuccesses.forEach((sch, idx) => {
                 const reasonsHtml = sch.reasons.map(r => `<span class="reason-badge">✓ ${r}</span>`).join("");
-                
-                // Calculate gauge offset (100 is max score, 100 dasharray)
                 const displayScore = Math.min(sch.score, 100);
                 const offset = 100 - displayScore;
-                
-                // Confidence Badge color logic
-                let confidenceClass = "trust-low";
-                if (sch.confidence >= 95) confidenceClass = "trust-verified";
-                else if (sch.confidence >= 80) confidenceClass = "trust-high";
-                
-                // Check if the link goes to dreamspon
+
+                // 링크가 공고 직접 URL인지 확인
                 const isDreamspon = sch.link && sch.link.includes("dreamspon.com");
-                const dreamsponNoticeHtml = isDreamspon 
-                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>드림스폰 로그인 필요</span></div>`
+                const linkWarningHtml = isDreamspon
+                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>공고 페이지 로그인 필요</span></div>`
+                    : '';
+
+                // 금액 표시
+                const amtDisplay = (sch.amount_est && sch.amount_est !== 500000)
+                    ? `<div class="sch-detail-item"><i class="fa-solid fa-won-sign" style="color:var(--success)"></i><span>&nbsp;예상 혜택: <strong>${sch.amount_est.toLocaleString()}원</strong></span></div>`
                     : '';
 
                 html += `
                     <div class="scholarship-card">
                         <div class="match-gauge-wrap">
-                            <div class="circular-gauge">
+                            <div class="circular-gauge" data-tooltip="match">
                                 <svg viewBox="0 0 36 36">
                                     <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                     <path class="progress" style="stroke-dashoffset: ${offset};" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 </svg>
                                 <span class="gauge-val">${sch.score}</span>
                             </div>
-                            <span class="gauge-label">Match</span>
+                            <span class="gauge-label">Match <i class="fa-solid fa-circle-info match-info-icon"></i></span>
+                            <div class="match-score-tooltip">
+                                <div class="match-tooltip-title">📊 MATCH 점수 구성</div>
+                                ${tooltipHtml}
+                                <div class="match-tooltip-note">※ 최대 점수 범위 초과 시 100으로 표시됩니다</div>
+                            </div>
                         </div>
                         <div class="card-main">
                             <div class="trust-badge-row">
@@ -557,25 +676,28 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <i class="fa-solid fa-calendar-days" style="color:var(--primary)"></i>
                                 <span>&nbsp;신청 기간: <strong>${sch.period}</strong></span>
                             </div>
+                            ${amtDisplay}
                             <div class="card-reasons">
                                 ${reasonsHtml}
                             </div>
                         </div>
                         <div class="card-action">
-                            ${dreamsponNoticeHtml}
-                            <a href="${sch.link}" target="_blank" class="apply-btn">
-                                <span>상세 요강 확인</span>
+                            ${linkWarningHtml}
+                            <a href="${sch.link}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+                                <span>공식 공고 바로가기</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
-                        </div>
+        </div>
                     </div>
                 `;
             });
             successList.innerHTML = html;
         }
 
-        // Render gap matches
-        if (gaps.length === 0) {
+        // ──────────────────────────────────────────────
+        // 6. 조건 미달 (gaps) 카드 렌더링
+        // ──────────────────────────────────────────────
+        if (allGaps.length === 0) {
             gapsList.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">🎉</div>
@@ -584,15 +706,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
         } else {
-            let html = "";
-            gaps.forEach((sch) => {
-                const gapsHtml = sch.gaps.map(g => `<div>${g}</div>`).join("");
-                
-                // Check if the link goes to dreamspon
+            let html = '';
+            allGaps.forEach((sch) => {
+                const gapsHtml = sch.gaps && sch.gaps.length > 0
+                    ? sch.gaps.map(g => `<div>${g}</div>`).join("")
+                    : '<div>ℹ️ 해당 장학금의 신청 기간이 마감되었습니다. 다음 공고를 기다려보세요.</div>';
+
                 const isDreamspon = sch.link && sch.link.includes("dreamspon.com");
-                const dreamsponNoticeHtml = isDreamspon 
-                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>드림스폰 로그인 필요</span></div>`
+                const linkWarningHtml = isDreamspon
+                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>공고 페이지 로그인 필요</span></div>`
                     : '';
+
+                const isMovedFromSuccess = sch._movedFromSuccess;
+                const tagLabel = isMovedFromSuccess ? '기간 마감' : '아까운 미달';
+                const tagStyle = isMovedFromSuccess
+                    ? 'background: rgba(239,68,68,0.08); color: #ef4444; border-color: rgba(239,68,68,0.15);'
+                    : 'background: rgba(245,158,11,0.08); color: var(--warning); border-color: rgba(245,158,11,0.15);';
 
                 html += `
                     <div class="scholarship-card gap-card">
@@ -602,7 +731,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <span class="category-tag">${sch.category || '일반'}</span>
                                     ${calculateDDay(sch.period)}
                                 </div>
-                                <span class="match-score-tag" style="background: rgba(245,158,11,0.08); color: var(--warning); border-color: rgba(245,158,11,0.15);">아까운 미달</span>
+                                <span class="match-score-tag" style="${tagStyle}">${tagLabel}</span>
                             </div>
                             <h3 class="sch-title">${sch.title}</h3>
                             <div class="sch-detail-item">
@@ -615,9 +744,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                         <div class="card-action">
-                            ${dreamsponNoticeHtml}
-                            <a href="${sch.link}" target="_blank" class="apply-btn">
-                                <span>요강 분석</span>
+                            ${linkWarningHtml}
+                            <a href="${sch.link}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+                                <span>공식 공고 확인</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
                         </div>

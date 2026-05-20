@@ -45,7 +45,7 @@ class KosafScraper:
                     href_clean = href.replace("&amp;", "&")
                     source_url = f"https://www.kosaf.go.kr/ko/notice.do{href_clean}"
                 else:
-                    source_url = "KOSAF"
+                    source_url = "https://www.kosaf.go.kr/ko/notice.do?ctgrId1=0000000002"
                 
                 post_date = (await cells[2].inner_text()).strip()
                 

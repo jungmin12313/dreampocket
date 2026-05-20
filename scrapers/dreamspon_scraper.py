@@ -119,7 +119,7 @@ class DreamsponScraper:
                     "title": "[현대차정몽구재단] 2026 문화예술 및 사회과학(경영학 포함) 미래학문 인재 선발 (학점 3.8 이상)",
                     "period": "2026.05.10 ~ 2026.06.10",
                     "status": "신청중",
-                    "source": "https://www.cmkfoundation-scholarship.org",
+                    "source": "https://www.cmkfoundation-scholarship.org/apply",
                     "collected_at": now_iso
                 },
                 {
@@ -127,7 +127,7 @@ class DreamsponScraper:
                     "title": "[KT&G장학재단] 2026 대학생 상상 장학 프로그램 (지원구간 2구간 이하)",
                     "period": "2026.05.01 ~ 2026.05.28",
                     "status": "신청중",
-                    "source": "https://scholarship.ktng.com",
+                    "source": "https://scholarship.ktng.com/apply",
                     "collected_at": now_iso
                 }
             ]

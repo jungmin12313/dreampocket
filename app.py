@@ -387,27 +387,35 @@ def match_scholarships():
             elif not analysis["is_eligible"] and analysis["is_potential"]:
                 gap_matches.append(item)
 
-        # Calculate total potential benefit amount
+        # Calculate total potential benefit amount (보수적: 금액이 명시된 항목만 합산)
         total_potential_amount = 0
         for item in success_matches:
-            # Simple amount estimation from title
             amount_est = 0
             amount_match = re.search(r'(\d+)만\s*원', item['title'])
             if amount_match:
                 amount_est = int(amount_match.group(1)) * 10000
             elif '전액' in item['title']:
-                amount_est = 3500000 # Avg tuition
+                amount_est = 3500000  # Avg tuition
             elif '생활비' in item['title']:
                 amount_est = 1000000
-            else:
-                amount_est = 500000 # Default
-            
+            # else: 기본값 500,000원은 보수적 집계를 위해 제외 (amount_est = 0)
+
             item['amount_est'] = amount_est
-            total_potential_amount += amount_est
+            # 명시된 금액이 있는 경우만 총액에 합산
+            if amount_est > 0:
+                total_potential_amount += amount_est
 
         # Sort descending by score
         success_matches = sorted(success_matches, key=lambda x: x["score"], reverse=True)
         gap_matches = sorted(gap_matches, key=lambda x: x["score"], reverse=True)
+
+        # Filter out loan-related scholarships (대출 관련 제외)
+        LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보']
+        def is_loan_related(title):
+            return any(kw in title for kw in LOAN_KEYWORDS)
+
+        success_matches = [m for m in success_matches if not is_loan_related(m['title'])]
+        gap_matches = [m for m in gap_matches if not is_loan_related(m['title'])]
 
         return jsonify({
             "success": True,

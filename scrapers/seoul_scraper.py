@@ -46,7 +46,7 @@ class SeoulScraper:
                     if href:
                         source_url = href if href.startswith("http") else f"https://www.hissf.or.kr{href}"
                     else:
-                        source_url = "https://www.hissf.or.kr"
+                        source_url = "https://www.hissf.or.kr/info/notice"
                     
                     post_date = (await cells[2].inner_text()).strip()
                     
@@ -74,7 +74,7 @@ class SeoulScraper:
                     "title": "[서울재단] 2026년 서울희망 대학 진로 장학금 (학점 3.0 이상 신청 가능)",
                     "period": "2026.05.01 ~ 2026.05.25",
                     "status": "진행중",
-                    "source": "https://www.hissf.or.kr",
+                    "source": "https://www.hissf.or.kr/info/notice",
                     "collected_at": now
                 },
                 {
@@ -82,7 +82,7 @@ class SeoulScraper:
                     "title": "[서울재단] 2026년 서울미래인재 경영학부 전문 인재 육성 장학금",
                     "period": "2026.05.10 ~ 2026.06.10",
                     "status": "진행중",
-                    "source": "https://www.hissf.or.kr",
+                    "source": "https://www.hissf.or.kr/info/notice",
                     "collected_at": now
                 },
                 {
@@ -90,7 +90,7 @@ class SeoulScraper:
                     "title": "[서울재단] 2026년 서울 희망 저소득층 복지 장학금 (학자금 지원구간 3구간 이하)",
                     "period": "2026.05.05 ~ 2026.05.30",
                     "status": "진행중",
-                    "source": "https://www.hissf.or.kr",
+                    "source": "https://www.hissf.or.kr/info/notice",
                     "collected_at": now
                 },
                 {
@@ -98,7 +98,7 @@ class SeoulScraper:
                     "title": "[서울재단] 2026년 이공계 및 상경계열(경영/경제) 청년 리더십 장학금 (학점 3.5 이상)",
                     "period": "2026.05.15 ~ 2026.06.15",
                     "status": "진행중",
-                    "source": "https://www.hissf.or.kr",
+                    "source": "https://www.hissf.or.kr/info/notice",
                     "collected_at": now
                 }
             ]

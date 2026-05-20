@@ -1529,6 +1529,7 @@ footer {
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
 }
 
 .circular-gauge {
@@ -1979,5 +1980,146 @@ footer {
 .dreamspon-login-notice i {
     color: var(--primary);
     font-size: 0.75rem;
+}
+
+/* ============================================== */
+/* MATCH 점수 툴팁 */
+/* ============================================== */
+/* .match-gauge-wrap is defined above at line 1524 */
+
+.match-info-icon {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    vertical-align: middle;
+    opacity: 0.7;
+    margin-left: 2px;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.match-gauge-wrap:hover .match-info-icon {
+    color: var(--primary);
+    opacity: 1;
+}
+
+.match-score-tooltip {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 320px;
+    background: #fff;
+    border: 1px solid rgba(79, 70, 229, 0.15);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 16px 40px rgba(79, 70, 229, 0.15), 0 4px 12px rgba(0,0,0,0.06);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px) scale(0.97);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    pointer-events: none;
+}
+
+.match-gauge-wrap:hover .match-score-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.match-tooltip-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--inner-border);
+}
+
+.match-tip-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 10px;
+    align-items: start;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.match-tip-row:last-of-type {
+    border-bottom: none;
+}
+
+.match-tip-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.match-tip-score {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--primary);
+    grid-column: 2;
+    grid-row: 1;
+    white-space: nowrap;
+    text-align: right;
+    background: rgba(79, 70, 229, 0.07);
+    border-radius: 6px;
+    padding: 1px 6px;
+}
+
+.match-tip-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+    grid-row: 2;
+    line-height: 1.4;
+}
+
+.match-tooltip-note {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--inner-border);
+    font-style: italic;
+}
+
+/* ============================================== */
+/* 정렬 기준 안내 배너 */
+/* ============================================== */
+.sort-info-banner {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(79, 70, 229, 0.04);
+    border: 1px solid rgba(79, 70, 229, 0.1);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.sort-info-banner i {
+    color: var(--primary);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.sort-info-banner strong {
+    color: var(--primary);
+}
+
+/* 총액 보수적 안내 서브텍스트 */
+.conservative-total-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 4px;
+    font-style: italic;
 }
 
