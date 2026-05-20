@@ -30,7 +30,12 @@ class KosafScraper:
                 # Clean up title if there are multiple spaces/newlines
                 title_text = " ".join(title_text.split())
                 
-                irrelevant_keywords = ['결과', '커뮤니티', '발표', '합격자', '수기', '후기', '게시판', '기자단', '서포터즈', '명단', '수여식']
+                irrelevant_keywords = [
+                    '결과', '커뮤니티', '발표', '합격자', '수기', '후기', '게시판', '기자단', 
+                    '서포터즈', '명단', '수여식', '지급요청서', '사전교육', '반환', '포기', 
+                    '모니터링', '영상안내', '교육영상', '설명회', '사용내역', '보고서', 
+                    '간담회', '발대식', '수혜자', '수정공고', '지급 안내', '변경 안내'
+                ]
                 if any(kw in title_text for kw in irrelevant_keywords):
                     continue
                 

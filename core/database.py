@@ -92,24 +92,42 @@ class ScholarshipDB:
         cursor = self.conn.cursor()
         for item in scholarship_list:
             try:
-                cursor.execute('''
-                    INSERT OR IGNORE INTO scholarships (
-                        category, title, period, status, source, collected_at,
-                        gpa_limit, income_limit, is_verified, analysis_status, last_health_check,
-                        major_restriction, region_restriction, benefit_type, benefit_amount, 
-                        application_link, is_closed
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    item.get('category'), item.get('title'), item.get('period'), 
-                    item.get('status'), item.get('source'), item.get('collected_at'),
-                    item.get('gpa_limit'), item.get('income_limit'), 
-                    item.get('is_verified', 0), item.get('analysis_status', '제목 분석'),
-                    item.get('last_health_check', datetime.now()),
-                    item.get('major_restriction'), item.get('region_restriction'),
-                    item.get('benefit_type'), item.get('benefit_amount'),
-                    item.get('application_link'), item.get('is_closed', 0)
-                ))
+                # To prevent duplicates of the same notice with slightly different periods or formatting,
+                # we check if a scholarship with the same title already exists.
+                cursor.execute('SELECT id FROM scholarships WHERE title = ?', (item.get('title'),))
+                existing = cursor.fetchone()
+                
+                if existing:
+                    # Update existing record with the new period and other details
+                    cursor.execute('''
+                        UPDATE scholarships SET
+                            category = ?, period = ?, status = ?, source = ?, collected_at = ?,
+                            last_health_check = ?, is_closed = 0
+                        WHERE id = ?
+                    ''', (
+                        item.get('category'), item.get('period'), item.get('status'),
+                        item.get('source'), item.get('collected_at'), datetime.now(),
+                        existing[0]
+                    ))
+                else:
+                    cursor.execute('''
+                        INSERT INTO scholarships (
+                            category, title, period, status, source, collected_at,
+                            gpa_limit, income_limit, is_verified, analysis_status, last_health_check,
+                            major_restriction, region_restriction, benefit_type, benefit_amount, 
+                            application_link, is_closed
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        item.get('category'), item.get('title'), item.get('period'), 
+                        item.get('status'), item.get('source'), item.get('collected_at'),
+                        item.get('gpa_limit'), item.get('income_limit'), 
+                        item.get('is_verified', 0), item.get('analysis_status', '제목 분석'),
+                        item.get('last_health_check', datetime.now()),
+                        item.get('major_restriction'), item.get('region_restriction'),
+                        item.get('benefit_type'), item.get('benefit_amount'),
+                        item.get('application_link'), item.get('is_closed', 0)
+                    ))
             except Exception as e:
                 print(f"Error saving scholarship: {e}")
         self.conn.commit()

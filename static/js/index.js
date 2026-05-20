@@ -304,6 +304,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----------------------------------------------------
     function submitSurvey() {
         // 1. Enter Loader Screen
+        introScreen.classList.remove("active");
         surveyScreen.classList.remove("active");
         analysisLoaderScreen.classList.add("active");
 
@@ -368,7 +369,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Back & Modify button
-    backModifyBtn.addEventListener("click", function () {
+    backModifyBtn.addEventListener("click", function (e) {
+        if (window.IS_SHARED_RESULT) {
+            e.preventDefault();
+            window.location.href = "/";
+            return;
+        }
         resultsScreen.classList.remove("active");
         surveyScreen.classList.add("active");
         currentStep = 1;
@@ -625,6 +631,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 incomeInput.value = decoded.income || "1";
                 locationInput.value = decoded.location || "";
                 majorInput.value = decoded.major || "";
+                
+                // Show shared banner and customize backModifyBtn
+                window.IS_SHARED_RESULT = true;
+                const banner = document.getElementById("shared-result-banner");
+                if (banner) banner.style.display = "block";
+                
+                if (backModifyBtn) {
+                    backModifyBtn.innerHTML = `<i class="fa-solid fa-house"></i> <span>나도 매칭해보기</span>`;
+                }
+
+                // Update Location button active states
+                const locationBtns = document.querySelectorAll(".location-step-wrapper .grid-btn");
+                locationBtns.forEach(btn => {
+                    if (btn.getAttribute("data-loc") === decoded.location) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                });
+
+                // Update Income button active states
+                const incomeBtns = document.querySelectorAll(".income-step-wrapper .grid-btn");
+                incomeBtns.forEach(btn => {
+                    if (btn.getAttribute("data-val") === decoded.income) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                });
                 
                 // Immediately submit
                 submitSurvey();

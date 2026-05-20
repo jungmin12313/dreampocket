@@ -222,10 +222,10 @@
                         
                         <div class="location-step-wrapper">
                             <div class="btn-grid location-grid">
-                                <button type="button" class="grid-btn" data-loc="서울특별시">서울</button>
+                                <button type="button" class="grid-btn active" data-loc="서울특별시">서울</button>
                                 <button type="button" class="grid-btn" data-loc="경기도">경기</button>
                                 <button type="button" class="grid-btn" data-loc="인천광역시">인천</button>
-                                <button type="button" class="grid-btn active" data-loc="광주광역시">광주</button>
+                                <button type="button" class="grid-btn" data-loc="광주광역시">광주</button>
                                 <button type="button" class="grid-btn" data-loc="전라남도">전남</button>
                                 <button type="button" class="grid-btn" data-loc="전라북도">전북</button>
                                 <button type="button" class="grid-btn" data-loc="부산광역시">부산</button>
@@ -240,7 +240,7 @@
                                 <button type="button" class="grid-btn" data-loc="제주특별자치도">제주</button>
                                 <button type="button" class="grid-btn grid-btn-full" data-loc="">선택하지 않음 (기본값)</button>
                             </div>
-                            <input type="hidden" id="location-input" value="광주광역시">
+                            <input type="hidden" id="location-input" value="서울특별시">
                         </div>
                     </div>
 
@@ -336,8 +336,13 @@
             <!-- Main Results Workspace Grid Layout -->
             <div class="results-workspace">
                 
+                <!-- Shared Result Header Banner -->
+                <div id="shared-result-banner" class="glass-panel" style="display:none; text-align:center; padding:20px; margin-bottom:25px; border-color:var(--primary); background:rgba(79, 70, 229, 0.04); border-radius:20px;">
+                    <h3 style="font-size:1.15rem; font-weight:800; color:var(--primary); margin-bottom: 6px;"><i class="fa-solid fa-gift pulsing-gem-main" style="font-size: 1.1rem; vertical-align: middle;"></i> 공유받은 맞춤 장학금 결과입니다!</h3>
+                    <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom: 12px;">입력된 조건(학점, 분위, 지역, 전공)에 매칭된 결과입니다.</p>
+                    <a href="/" class="share-action-btn" style="display:inline-flex; text-decoration:none; margin: 0 auto; font-size: 0.8rem; padding: 8px 16px;">나도 내 장학금 매칭해보기 <i class="fa-solid fa-magic"></i></a>
+                </div>
 
-                
                 <!-- Tab Controls -->
                 <div class="tabs-header">
                     <button class="tab-btn active" id="tab-success">
@@ -389,7 +394,49 @@
         </div>
     </footer>
 
+    <!-- Income Bracket Modal -->
+    <div class="modal-overlay" id="income-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>소득구간(소득분위) 경계값 안내</h3>
+                <button type="button" class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5;">
+                    한국장학재단 기준 국가장학금 소득구간(분위) 경계값입니다. (월 소득인정액 기준)
+                </p>
+                <table class="income-table">
+                    <thead>
+                        <tr>
+                            <th>구간(분위)</th>
+                            <th>경계값 (월 소득인정액)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1구간</td><td>3,500,000원 이하</td></tr>
+                        <tr><td>2구간</td><td>5,200,000원 이하</td></tr>
+                        <tr><td>3구간</td><td>6,800,000원 이하</td></tr>
+                        <tr><td>4구간</td><td>8,200,000원 이하</td></tr>
+                        <tr><td>5구간</td><td>9,400,000원 이하</td></tr>
+                        <tr><td>6구간</td><td>10,900,000원 이하</td></tr>
+                        <tr><td>7구간</td><td>12,700,000원 이하</td></tr>
+                        <tr><td>8구간</td><td>14,500,000원 이하</td></tr>
+                        <tr><td>9구간</td><td>20,000,000원 이하</td></tr>
+                        <tr><td>10구간</td><td>20,000,000원 초과</td></tr>
+                    </tbody>
+                </table>
+                <div class="modal-tip">
+                    <strong>💡 참고 사항:</strong>
+                    <ul style="margin-left: 15px; margin-top: 5px;">
+                        <li>소득인정액은 '소득평가액 + 재산의 소득환산액'으로 계산됩니다.</li>
+                        <li>한국장학재단 누리집 또는 모바일 앱의 [소득구간 모의계산] 메뉴에서 가구 소득과 재산을 입력해 모의 산출해 볼 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Core Script -->
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}?v=1.1"></script>
 </body>
 </html>
