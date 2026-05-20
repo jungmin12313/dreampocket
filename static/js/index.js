@@ -529,6 +529,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (sch.confidence >= 95) confidenceClass = "trust-verified";
                 else if (sch.confidence >= 80) confidenceClass = "trust-high";
                 
+                // Check if the link goes to dreamspon
+                const isDreamspon = sch.link && sch.link.includes("dreamspon.com");
+                const dreamsponNoticeHtml = isDreamspon 
+                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>드림스폰 로그인 필요</span></div>`
+                    : '';
+
                 html += `
                     <div class="scholarship-card">
                         <div class="match-gauge-wrap">
@@ -556,6 +562,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                         <div class="card-action">
+                            ${dreamsponNoticeHtml}
                             <a href="${sch.link}" target="_blank" class="apply-btn">
                                 <span>상세 요강 확인</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -580,6 +587,13 @@ document.addEventListener("DOMContentLoaded", function () {
             let html = "";
             gaps.forEach((sch) => {
                 const gapsHtml = sch.gaps.map(g => `<div>${g}</div>`).join("");
+                
+                // Check if the link goes to dreamspon
+                const isDreamspon = sch.link && sch.link.includes("dreamspon.com");
+                const dreamsponNoticeHtml = isDreamspon 
+                    ? `<div class="dreamspon-login-notice"><i class="fa-solid fa-lock"></i> <span>드림스폰 로그인 필요</span></div>`
+                    : '';
+
                 html += `
                     <div class="scholarship-card gap-card">
                         <div class="card-main">
@@ -601,6 +615,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                         <div class="card-action">
+                            ${dreamsponNoticeHtml}
                             <a href="${sch.link}" target="_blank" class="apply-btn">
                                 <span>요강 분석</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>

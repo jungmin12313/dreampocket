@@ -1032,7 +1032,8 @@ header {
     border-top: 1px solid var(--inner-border);
     padding-top: 15px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .apply-btn {
@@ -1048,6 +1049,7 @@ header {
     align-items: center;
     gap: 6px;
     transition: all 0.2s;
+    margin-left: auto;
 }
 
 .apply-btn:hover {
@@ -1959,5 +1961,23 @@ footer {
     font-weight: 800;
     color: white;
     margin-right: 4px;
+}
+
+.dreamspon-login-notice {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    background: rgba(79, 70, 229, 0.05);
+    border: 1px solid rgba(79, 70, 229, 0.1);
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+}
+
+.dreamspon-login-notice i {
+    color: var(--primary);
+    font-size: 0.75rem;
 }
 
