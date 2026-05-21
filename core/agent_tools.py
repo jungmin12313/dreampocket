@@ -7,6 +7,8 @@ from scrapers.dreamspon_scraper import DreamsponScraper
 from scrapers.regional_aggregator import RegionalAggregatorScraper
 from core.document_analyzer import analyzer
 from core.auto_applier import applier
+from core.link_validator import validator
+import asyncio
 
 def get_user_and_matches(user_id: str):
     user = db.get_user_profile(user_id)
@@ -57,6 +59,29 @@ async def refresh_scholarship_data():
         print(f"Error running RegionalAggregatorScraper: {e}")
         
     db.save_scholarships(results)
+    
+    # 5.5. Link Validation for all active scholarships
+    try:
+        print("[Auto-Refresh] Starting link validation for active scholarships...")
+        all_schs = db.get_all_scholarships()
+        active_schs = [s for s in all_schs if s.get('status') not in ['마감', '만료', '비활성'] and not s.get('is_closed')]
+        
+        if active_schs:
+            tasks = [validator.is_link_valid(s['source']) for s in active_schs]
+            validity_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            cursor = db.conn.cursor()
+            invalid_count = 0
+            for i, s in enumerate(active_schs):
+                is_valid = validity_results[i]
+                if isinstance(is_valid, Exception) or not is_valid:
+                    cursor.execute("UPDATE scholarships SET status = '마감', is_closed = 1 WHERE id = ?", (s['id'],))
+                    invalid_count += 1
+            db.conn.commit()
+            print(f"[Auto-Refresh] Link validation complete. Marked {invalid_count} scholarships as dead/closed.")
+    except Exception as e:
+        print(f"Error during link validation: {e}")
+    
     
     # 6. Run AI Enrichment for newly collected data
     try:
