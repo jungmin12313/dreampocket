@@ -5,6 +5,7 @@ from scrapers.seoul_scraper import SeoulScraper
 from scrapers.gwangju_scraper import GwangjuScraper
 from scrapers.dreamspon_scraper import DreamsponScraper
 from scrapers.regional_aggregator import RegionalAggregatorScraper
+from scrapers.campuspick_scraper import CampusPickScraper
 from core.document_analyzer import analyzer
 from core.auto_applier import applier
 from core.link_validator import validator
@@ -57,6 +58,14 @@ async def refresh_scholarship_data():
         results.extend(regional_results)
     except Exception as e:
         print(f"Error running RegionalAggregatorScraper: {e}")
+        
+    # 6. Run CampusPick Scraper (New)
+    try:
+        campuspick = CampusPickScraper()
+        campuspick_results = await campuspick.fetch_scholarship_list()
+        results.extend(campuspick_results)
+    except Exception as e:
+        print(f"Error running CampusPickScraper: {e}")
         
     db.save_scholarships(results)
     

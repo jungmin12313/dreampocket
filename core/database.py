@@ -1,10 +1,24 @@
 import sqlite3
 from datetime import datetime
+import os
+import re
 
 class ScholarshipDB:
     def __init__(self, db_name="data/antigravity_bot.db"):
         self.conn = sqlite3.connect(db_name, check_same_thread=False)
         self.create_tables()
+
+    def normalize_title(self, title):
+        if not title: return ""
+        # 1. Remove brackets and contents like [기관명], (2026), <공지>
+        title = re.sub(r'\[.*?\]|\(.*?\)|\<.*?\>', '', title)
+        # 2. Remove common words that vary
+        words_to_remove = ['2026', '2026년', '상반기', '하반기', '신청', '가능', '선발', '안내', '공고', '제\d+기']
+        for word in words_to_remove:
+            title = re.sub(r'\b' + word + r'\b', '', title)
+        # 3. Remove all non-alphanumeric characters and whitespaces
+        title = re.sub(r'[^가-힣a-zA-Z0-9]', '', title)
+        return title
 
     def create_tables(self):
         cursor = self.conn.cursor()
@@ -92,10 +106,27 @@ class ScholarshipDB:
         cursor = self.conn.cursor()
         for item in scholarship_list:
             try:
-                # To prevent duplicates of the same notice with slightly different periods or formatting,
-                # we check if a scholarship with the same title already exists.
-                cursor.execute('SELECT id FROM scholarships WHERE title = ?', (item.get('title'),))
-                existing = cursor.fetchone()
+                # To prevent duplicates, we first check if the source URL already exists.
+                # If source is the same, it's definitely the same scholarship (unless it's a generic notice board URL).
+                is_generic_url = item.get('source', '').endswith(('/notice', '/list.html', '/notice.do')) or '?' not in item.get('source', '')
+                
+                existing = None
+                if not is_generic_url:
+                    cursor.execute('SELECT id FROM scholarships WHERE source = ?', (item.get('source'),))
+                    existing = cursor.fetchone()
+                
+                # Intelligent Title Deduplication
+                if not existing:
+                    new_norm = self.normalize_title(item.get('title', ''))
+                    
+                    # Fetch all existing titles to find a fuzzy match
+                    # (In a huge DB this might be slow, but for a few hundred it's instant)
+                    cursor.execute('SELECT id, title FROM scholarships')
+                    for row in cursor.fetchall():
+                        db_id, db_title = row
+                        if self.normalize_title(db_title) == new_norm:
+                            existing = (db_id,)
+                            break
                 
                 if existing:
                     # Update existing record with the new period and other details

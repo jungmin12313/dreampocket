@@ -381,8 +381,8 @@ def match_scholarships():
                 "is_verified": analysis["is_verified"]
             }
 
-            # If eligible and score is high enough (at least 30 or category match)
-            if analysis["is_eligible"] and analysis["score"] >= 30:
+            # If eligible and score is high enough (at least 20 or category match)
+            if analysis["is_eligible"] and analysis["score"] >= 20:
                 success_matches.append(item)
             elif not analysis["is_eligible"] and analysis["is_potential"]:
                 gap_matches.append(item)
@@ -390,15 +390,34 @@ def match_scholarships():
         # Calculate total potential benefit amount (보수적: 금액이 명시된 항목만 합산)
         total_potential_amount = 0
         for item in success_matches:
+            # Re-fetch sch to get benefit_amount
+            # Since all_scholarships is accessible here and item['id'] matches sch['id']
+            # We already have sch locally if we do it in the first loop. Let's do it cleaner:
+            # We can find the original sch object
+            sch = next((s for s in all_scholarships if s["id"] == item["id"]), None)
             amount_est = 0
-            amount_match = re.search(r'(\d+)만\s*원', item['title'])
-            if amount_match:
-                amount_est = int(amount_match.group(1)) * 10000
-            elif '전액' in item['title']:
-                amount_est = 3500000  # Avg tuition
-            elif '생활비' in item['title']:
-                amount_est = 1000000
-            # else: 기본값 500,000원은 보수적 집계를 위해 제외 (amount_est = 0)
+            
+            if sch and sch.get('benefit_amount'):
+                amount_str = sch['benefit_amount']
+                if '전액' in amount_str:
+                    amount_est = 3500000
+                else:
+                    nums = re.findall(r'(\d+)', amount_str.replace(',', ''))
+                    if nums:
+                        val = int(nums[0])
+                        if '억' in amount_str: val *= 100000000
+                        elif '만' in amount_str or val < 10000: val *= 10000
+                        amount_est = val
+
+            if amount_est == 0:
+                amount_match = re.search(r'(\d+)만\s*원?', item['title'])
+                if amount_match:
+                    amount_est = int(amount_match.group(1)) * 10000
+                elif '전액' in item['title']:
+                    amount_est = 3500000  # Avg tuition
+                elif '생활비' in item['title']:
+                    amount_est = 1000000
+                # else: 기본값(0)을 유지하여 허수 합산 방지
 
             item['amount_est'] = amount_est
             # 명시된 금액이 있는 경우만 총액에 합산

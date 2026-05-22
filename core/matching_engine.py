@@ -302,13 +302,12 @@ class ScholarshipBrain:
                         amount_est = val
             
             if amount_est == 0:
-                amount_match = re.search(r'(\d+)만\s*원', sch['title'])
+                amount_match = re.search(r'(\d+)만\s*원?', sch['title'])
                 if amount_match:
                     amount_est = int(amount_match.group(1)) * 10000
                 elif '전액' in sch['title']:
                     amount_est = 3500000
-                else:
-                    amount_est = 500000
+                # 기본값 500,000원은 제외 (허수 방지)
 
             item = {
                 "id": sch['id'],

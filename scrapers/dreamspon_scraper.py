@@ -60,7 +60,8 @@ class DreamsponScraper:
                         '사전교육', '반환', '포기', '모니터링', '영상안내', '교육영상', '설명회', 
                         '사용내역', '보고서', '간담회', '발대식', '수혜자', '수정공고', '지급 안내', '변경 안내'
                     ]
-                    if any(kw in title_clean for kw in irrelevant_keywords):
+                    # Check raw_title instead of title_clean because hashtags might hide "꿀팁"
+                    if any(kw in raw_title for kw in irrelevant_keywords):
                         continue
                     
                     # Complete relative URL
