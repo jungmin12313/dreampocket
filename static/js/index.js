@@ -964,4 +964,217 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    // ----------------------------------------------------
+    // Bookmark (찜하기) Logic
+    // ----------------------------------------------------
+    window.isBookmarked = function(id) {
+        let saved = JSON.parse(localStorage.getItem('saved_scholarships') || '[]');
+        return saved.some(s => s.id === id);
+    };
+
+    window.toggleBookmark = function(id, title, period, link) {
+        let saved = JSON.parse(localStorage.getItem('saved_scholarships') || '[]');
+        const idx = saved.findIndex(s => s.id === id);
+        if (idx > -1) {
+            saved.splice(idx, 1);
+            showToast("보관함에서 삭제되었습니다.");
+        } else {
+            saved.push({ id, title, period, link, savedAt: new Date().toISOString() });
+            showToast("❤️ 보관함에 저장되었습니다!");
+        }
+        localStorage.setItem('saved_scholarships', JSON.stringify(saved));
+        updateSavedBadge();
+        
+        // Toggle button visual state
+        const btn = document.querySelector(`.scholarship-card[data-sch-id="${id}"] .bookmark-btn`);
+        if (btn) {
+            btn.style.color = window.isBookmarked(id) ? '#ef4444' : 'rgba(255,255,255,0.5)';
+        }
+    };
+
+    function updateSavedBadge() {
+        const badge = document.getElementById('saved-badge');
+        if (!badge) return;
+        let saved = JSON.parse(localStorage.getItem('saved_scholarships') || '[]');
+        if (saved.length > 0) {
+            badge.innerText = saved.length;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    const openSavedBtn = document.getElementById('open-saved-btn');
+    const closeSavedBtn = document.getElementById('close-saved-btn');
+    const savedPanel = document.getElementById('saved-panel');
+    const savedOverlay = document.getElementById('saved-panel-overlay');
+
+    if (openSavedBtn && savedPanel) {
+        openSavedBtn.addEventListener('click', () => {
+            renderSavedList();
+            savedPanel.style.right = '0';
+            savedOverlay.style.display = 'block';
+        });
+        closeSavedBtn.addEventListener('click', () => {
+            savedPanel.style.right = '-400px';
+            savedOverlay.style.display = 'none';
+        });
+        savedOverlay.addEventListener('click', () => {
+            savedPanel.style.right = '-400px';
+            savedOverlay.style.display = 'none';
+        });
+    }
+
+    function renderSavedList() {
+        const listEl = document.getElementById('saved-list');
+        let saved = JSON.parse(localStorage.getItem('saved_scholarships') || '[]');
+        
+        if (saved.length === 0) {
+            listEl.innerHTML = `
+                <div style="text-align: center; color: var(--text-secondary); margin-top: 50px; font-size: 0.9rem;">
+                    <i class="fa-regular fa-folder-open" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i><br>
+                    아직 찜한 장학금이 없습니다.
+                </div>
+            `;
+            return;
+        }
+
+        // Sort by period roughly
+        saved.sort((a, b) => a.period.localeCompare(b.period));
+
+        let html = '';
+        saved.forEach(s => {
+            html += `
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); position: relative;">
+                    <button onclick="toggleBookmark(${s.id}, '', '', '')" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #ef4444; font-size: 1.1rem; cursor: pointer;"><i class="fa-solid fa-heart"></i></button>
+                    <h4 style="font-size: 0.95rem; margin-bottom: 8px; padding-right: 20px;">${s.title}</h4>
+                    <div style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;"><i class="fa-regular fa-calendar"></i> ${s.period}</div>
+                    <a href="${s.link}" target="_blank" style="display: inline-block; font-size: 0.8rem; background: var(--primary); color: #fff; text-decoration: none; padding: 4px 10px; border-radius: 4px;">공고 보기</a>
+                </div>
+            `;
+        });
+        listEl.innerHTML = html;
+        
+        // Re-bind delete buttons to update panel immediately
+        listEl.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => setTimeout(renderSavedList, 50));
+        });
+    }
+
+    updateSavedBadge();
+
+    // ----------------------------------------------------
+    // AI Eligibility Check Logic
+    // ----------------------------------------------------
+    const aiModal = document.getElementById('ai-modal-overlay');
+    const closeAiModalBtn = document.getElementById('close-ai-modal-btn');
+    const aiChatBox = document.getElementById('ai-chat-box');
+    const aiControls = document.getElementById('ai-chat-controls');
+    
+    let currentAiQuestions = [];
+    let currentQuestionIndex = 0;
+    
+    window.openAiCheckModal = function(schId, title) {
+        if (!aiModal) return;
+        aiModal.style.display = 'flex';
+        aiChatBox.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 150px; gap: 15px;">
+                <div class="loader-spinner" style="border-top-color: #c084fc;"></div>
+                <span style="color: #cbd5e1; font-size: 0.9rem;">"${title}"<br>공고문 킬러 조건 분석 중...</span>
+            </div>
+        `;
+        aiControls.style.display = 'none';
+
+        fetch('/api/ai-check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: schId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                aiChatBox.innerHTML = `<div style="color: #f87171; text-align: center;">오류: ${data.error}</div>`;
+                return;
+            }
+            currentAiQuestions = data.questions || [];
+            currentQuestionIndex = 0;
+            if (currentAiQuestions.length > 0) {
+                renderNextAiQuestion();
+            } else {
+                aiChatBox.innerHTML = `<div style="text-align: center; color: #4ade80;">이 장학금은 별도의 까다로운 특수 조건이 없습니다!<br>기본 성적/소득 요건만 맞다면 바로 지원해보세요.</div>`;
+            }
+        })
+        .catch(err => {
+            aiChatBox.innerHTML = `<div style="color: #f87171; text-align: center;">네트워크 오류가 발생했습니다.</div>`;
+        });
+    };
+
+    if (closeAiModalBtn) {
+        closeAiModalBtn.addEventListener('click', () => {
+            aiModal.style.display = 'none';
+        });
+    }
+
+    function renderNextAiQuestion() {
+        if (currentQuestionIndex >= currentAiQuestions.length) {
+            // All questions answered positively!
+            addChatMessage("AI", "🎉 완벽합니다! 모든 특수 자격 요건을 충족합니다. 최종 합격 확률이 매우 높으니 지금 바로 지원하세요!", "#4ade80");
+            aiControls.style.display = 'none';
+            return;
+        }
+
+        const q = currentAiQuestions[currentQuestionIndex];
+        if (currentQuestionIndex === 0) {
+            aiChatBox.innerHTML = ''; // Clear loading
+        }
+        
+        addChatMessage("AI", q);
+        aiControls.style.display = 'flex';
+    }
+
+    function addChatMessage(sender, text, color = "#fff") {
+        const msgDiv = document.createElement("div");
+        msgDiv.style.padding = "12px 15px";
+        msgDiv.style.borderRadius = "12px";
+        msgDiv.style.maxWidth = "85%";
+        msgDiv.style.fontSize = "0.95rem";
+        msgDiv.style.lineHeight = "1.4";
+        
+        if (sender === "AI") {
+            msgDiv.style.background = "rgba(139, 92, 246, 0.2)";
+            msgDiv.style.border = "1px solid rgba(139, 92, 246, 0.3)";
+            msgDiv.style.alignSelf = "flex-start";
+            msgDiv.style.color = color;
+            msgDiv.innerHTML = `<i class="fa-solid fa-robot" style="margin-right: 6px; opacity: 0.7;"></i> ${text}`;
+        } else {
+            msgDiv.style.background = "rgba(255, 255, 255, 0.1)";
+            msgDiv.style.alignSelf = "flex-end";
+            msgDiv.style.color = "#e2e8f0";
+            msgDiv.innerText = text;
+        }
+        
+        aiChatBox.appendChild(msgDiv);
+        aiChatBox.scrollTop = aiChatBox.scrollHeight;
+    }
+
+    document.querySelectorAll('.ai-answer-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const ans = e.target.getAttribute('data-answer');
+            const ansText = ans === 'yes' ? "네, 그렇습니다." : "아니오.";
+            addChatMessage("User", ansText);
+            
+            aiControls.style.display = 'none';
+            
+            setTimeout(() => {
+                if (ans === 'no') {
+                    addChatMessage("AI", "⚠️ 아쉽지만 해당 요건을 충족하지 못해 합격 확률이 낮습니다. 다른 장학금을 추천해 드릴게요!", "#f87171");
+                } else {
+                    currentQuestionIndex++;
+                    renderNextAiQuestion();
+                }
+            }, 600);
+        });
+    });
+
 });

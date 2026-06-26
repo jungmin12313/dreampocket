@@ -324,6 +324,30 @@ def get_stats():
         }
     })
 
+@app.route("/api/admin/refresh", methods=["POST"])
+def admin_refresh():
+    import threading
+    import asyncio
+    from core.agent_tools import refresh_scholarship_data
+    
+    def run_crawl_once():
+        new_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(new_loop)
+        try:
+            print("[Admin Command] Force-triggering full crawl...")
+            new_loop.run_until_complete(refresh_scholarship_data())
+        except Exception as e:
+            print(f"[Admin Command] Error running force crawl: {e}")
+        finally:
+            new_loop.close()
+            
+    threading.Thread(target=run_crawl_once, daemon=True).start()
+    
+    return jsonify({
+        "success": True,
+        "message": "백그라운드에서 크롤링(동기화) 작업이 시작되었습니다."
+    })
+
 @app.route("/api/match", methods=["POST"])
 def match_scholarships():
     try:
@@ -487,6 +511,20 @@ def subscribe():
     except Exception as e:
         print(f"Subscription Error: {e}")
         return jsonify({"success": False, "message": "서버 오류가 발생했습니다."}), 500
+
+@app.route("/api/ai-check", methods=["POST"])
+def ai_check():
+    from core.ai_checker import generate_eligibility_questions
+    data = request.json
+    sch_id = data.get("id")
+    if not sch_id:
+        return jsonify({"error": "No scholarship ID provided"}), 400
+        
+    try:
+        questions = generate_eligibility_questions(sch_id)
+        return jsonify({"questions": questions})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     # Determine environment
