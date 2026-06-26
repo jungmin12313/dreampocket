@@ -391,6 +391,15 @@ os.makedirs("static/js", exist_ok=True)
 daemon = threading.Thread(target=run_auto_refresh, daemon=True)
 daemon.start()
 
+@app.route('/api/admin/clean', methods=['GET'])
+def admin_clean_db():
+    try:
+        from scripts.clean_db import clean_database
+        clean_database()
+        return jsonify({"status": "success", "message": "Database cleaned successfully."}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == "__main__":
     # Determine environment
     is_production = os.environ.get("FLASK_ENV") == "production"
