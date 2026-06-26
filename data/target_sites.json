@@ -152,5 +152,138 @@
         "url": "https://www.skku.edu/skku/campus/support/scholarship.do",
         "category": "대학 장학금",
         "region": "서울특별시"
+    },
+    {
+        "id": "univ_pusan",
+        "name": "부산대학교",
+        "url": "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN100",
+        "category": "대학 장학금",
+        "region": "부산광역시"
+    },
+    {
+        "id": "univ_knu",
+        "name": "경북대학교",
+        "url": "https://www.knu.ac.kr/wbbs/wbbs/bbs/btin/list.action?bbs_cde=1",
+        "category": "대학 장학금",
+        "region": "대구광역시"
+    },
+    {
+        "id": "univ_jnu",
+        "name": "전남대학교",
+        "url": "https://www.jnu.ac.kr/WebApp/web/HOM/COM/Board/board.aspx?boardID=5",
+        "category": "대학 장학금",
+        "region": "광주광역시"
+    },
+    {
+        "id": "univ_cnu",
+        "name": "충남대학교",
+        "url": "https://plus.cnu.ac.kr/_prog/_board/?code=sub07_0702",
+        "category": "대학 장학금",
+        "region": "대전광역시"
+    },
+    {
+        "id": "univ_kangwon",
+        "name": "강원대학교",
+        "url": "https://www.kangwon.ac.kr/www/selectBbsNttList.do?bbsNo=14&key=74",
+        "category": "대학 장학금",
+        "region": "강원특별자치도"
+    },
+    {
+        "id": "univ_chungbuk",
+        "name": "충북대학교",
+        "url": "https://www.chungbuk.ac.kr/site/pr/boardList.do?boardSeq=113&key=519",
+        "category": "대학 장학금",
+        "region": "충청북도"
+    },
+    {
+        "id": "univ_jbnu",
+        "name": "전북대학교",
+        "url": "https://www.jbnu.ac.kr/kor/?menuID=139",
+        "category": "대학 장학금",
+        "region": "전북특별자치도"
+    },
+    {
+        "id": "univ_gnu",
+        "name": "경상국립대학교",
+        "url": "https://www.gnu.ac.kr/main/selectBbsNttList.do?bbsNo=26&key=40",
+        "category": "대학 장학금",
+        "region": "경상남도"
+    },
+    {
+        "id": "univ_jeju",
+        "name": "제주대학교",
+        "url": "https://www.jejunu.ac.kr/ara/notice/scholarship.htm",
+        "category": "대학 장학금",
+        "region": "제주특별자치도"
+    },
+    {
+        "id": "univ_inu",
+        "name": "인천대학교",
+        "url": "https://www.inu.ac.kr/inu/1560/subview.do",
+        "category": "대학 장학금",
+        "region": "인천광역시"
+    },
+    {
+        "id": "univ_inha",
+        "name": "인하대학교",
+        "url": "https://www.inha.ac.kr/kr/952/subview.do",
+        "category": "대학 장학금",
+        "region": "인천광역시"
+    },
+    {
+        "id": "univ_pknu",
+        "name": "부경대학교",
+        "url": "https://www.pknu.ac.kr/main/163",
+        "category": "대학 장학금",
+        "region": "부산광역시"
+    },
+    {
+        "id": "univ_donga",
+        "name": "동아대학교",
+        "url": "https://donga.ac.kr/gzSub_007001002.aspx",
+        "category": "대학 장학금",
+        "region": "부산광역시"
+    },
+    {
+        "id": "univ_yu",
+        "name": "영남대학교",
+        "url": "https://www.yu.ac.kr/main/bachelor/scholarship.do",
+        "category": "대학 장학금",
+        "region": "경상북도"
+    },
+    {
+        "id": "univ_kmu",
+        "name": "계명대학교",
+        "url": "https://www.kmu.ac.kr/uni/main/page.jsp?mnu_uid=142",
+        "category": "대학 장학금",
+        "region": "대구광역시"
+    },
+    {
+        "id": "univ_chosun",
+        "name": "조선대학교",
+        "url": "https://www.chosun.ac.kr/chosun/board/scholarship.do",
+        "category": "대학 장학금",
+        "region": "광주광역시"
+    },
+    {
+        "id": "univ_hannam",
+        "name": "한남대학교",
+        "url": "https://www.hannam.ac.kr/kor/guide/guide_0102.html",
+        "category": "대학 장학금",
+        "region": "대전광역시"
+    },
+    {
+        "id": "univ_ulsan",
+        "name": "울산대학교",
+        "url": "https://www.ulsan.ac.kr/kor/CMS/Board/Board.do?mCode=MN113",
+        "category": "대학 장학금",
+        "region": "울산광역시"
+    },
+    {
+        "id": "univ_kongju",
+        "name": "공주대학교",
+        "url": "https://www.kongju.ac.kr/kongju/12502/subview.do",
+        "category": "대학 장학금",
+        "region": "충청남도"
     }
 ]
