@@ -887,4 +887,81 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(() => {});
+
+    // ----------------------------------------------------
+    // Notification Subscribe Logic
+    // ----------------------------------------------------
+    const subscribeModal = document.getElementById("subscribe-modal");
+    const openSubscribeBtn = document.getElementById("open-subscribe-modal");
+    const closeSubscribeBtn = document.getElementById("close-subscribe-modal");
+    const subscribeForm = document.getElementById("subscribe-form");
+
+    if (openSubscribeBtn && subscribeModal && closeSubscribeBtn) {
+        openSubscribeBtn.addEventListener("click", () => {
+            // Preview the conditions currently selected
+            const previewEl = document.getElementById("sub-cond-preview");
+            if (previewEl) {
+                let currentGPA = gpaVal ? gpaVal.innerText : "입력 학점";
+                let currentIncome = incomeInput ? (incomeInput.value === "모름" ? "소득모름" : incomeInput.value + "구간") : "입력 소득";
+                let currentLoc = locationInput ? (locationInput.value || "전국") : "입력 지역";
+                previewEl.innerText = `[${currentLoc} / ${currentIncome} / ${currentGPA}]`;
+            }
+            subscribeModal.classList.add("active");
+        });
+
+        closeSubscribeBtn.addEventListener("click", () => {
+            subscribeModal.classList.remove("active");
+        });
+    }
+
+    if (subscribeForm) {
+        subscribeForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const phone = document.getElementById("sub-phone").value;
+            const agree = document.getElementById("sub-agree").checked;
+
+            if (!agree) {
+                showToast("개인정보 수집에 동의해주세요.");
+                return;
+            }
+
+            const payload = {
+                phone: phone,
+                gpa: getNormalizedGPA(),
+                income: incomeInput.value,
+                location: locationInput.value,
+                major: majorInput.value
+            };
+
+            const submitBtn = subscribeForm.querySelector("button[type='submit']");
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "신청 중...";
+            submitBtn.disabled = true;
+
+            fetch("/api/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                
+                if (data.success) {
+                    showToast("알림톡 신청이 완료되었습니다! 🎉");
+                    subscribeModal.classList.remove("active");
+                    subscribeForm.reset();
+                } else {
+                    showToast(data.message || "오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                showToast("네트워크 오류가 발생했습니다.");
+            });
+        });
+    }
 });

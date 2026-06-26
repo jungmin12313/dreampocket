@@ -2123,3 +2123,84 @@ footer {
     font-style: italic;
 }
 
+/* ==================================================== */
+/* NOTIFICATION SUBSCRIPTION BANNER & ANIMATIONS */
+/* ==================================================== */
+.subscribe-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 28px;
+    margin-bottom: 25px;
+    border-color: var(--warning);
+    background: rgba(245, 158, 11, 0.03);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.1);
+}
+
+.sub-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.sub-banner-text h3 {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.sub-banner-text p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.sub-action-btn {
+    background: linear-gradient(135deg, var(--warning), #fbbf24);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 14px;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    transition: all 0.3s;
+}
+
+.sub-action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+    filter: brightness(1.05);
+}
+
+.pulse-button {
+    animation: heartBeat 2s infinite;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.06); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.06); }
+  70% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+    .subscribe-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        gap: 15px;
+    }
+    .sub-banner-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .sub-action-btn {
+        width: 100%;
+    }
+}

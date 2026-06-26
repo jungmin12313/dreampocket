@@ -400,6 +400,54 @@ def admin_clean_db():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/subscribe', methods=['POST'])
+def subscribe():
+    try:
+        data = request.json
+        phone = data.get("phone")
+        gpa = data.get("gpa")
+        income = data.get("income")
+        location = data.get("location")
+        major = data.get("major")
+        
+        if not phone:
+            return jsonify({"success": False, "message": "휴대폰 번호는 필수입니다."}), 400
+            
+        subscription = {
+            "phone": phone,
+            "gpa": gpa,
+            "income": income,
+            "location": location,
+            "major": major,
+            "created_at": datetime.now().isoformat()
+        }
+        
+        subs_file = "data/subscriptions.json"
+        
+        # Load existing subscriptions
+        subs = []
+        if os.path.exists(subs_file):
+            with open(subs_file, "r", encoding="utf-8") as f:
+                try:
+                    subs = json.load(f)
+                except json.JSONDecodeError:
+                    subs = []
+                    
+        # Check for duplicates based on phone (simple approach)
+        for s in subs:
+            if s.get("phone") == phone:
+                return jsonify({"success": True, "message": "이미 신청된 번호입니다. 조건이 갱신되었습니다."}), 200
+                
+        subs.append(subscription)
+        
+        with open(subs_file, "w", encoding="utf-8") as f:
+            json.dump(subs, f, ensure_ascii=False, indent=4)
+            
+        return jsonify({"success": True, "message": "신청 완료"}), 200
+    except Exception as e:
+        print(f"Subscription Error: {e}")
+        return jsonify({"success": False, "message": "서버 오류가 발생했습니다."}), 500
+
 if __name__ == "__main__":
     # Determine environment
     is_production = os.environ.get("FLASK_ENV") == "production"

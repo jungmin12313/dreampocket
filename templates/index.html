@@ -93,20 +93,20 @@
                 
                 <!-- Left Column: Rich Brand Info & Social Proof Tickers -->
                 <div class="brand-showcase-box">
-                    <span class="brand-tag"><i class="fa-solid fa-database"></i> SCHOLARSHIP MATCHING SYSTEM</span>
-                    <h1 class="brand-hero-title">대학생 숨은 장학금,<br>이제 <span>주머니</span>에서 꺼내세요</h1>
+                    <span class="brand-tag"><i class="fa-solid fa-fire text-danger"></i> DREAMPOCKET SCHOLARSHIP</span>
+                    <h1 class="brand-hero-title">내 돈인데 남이 받는 장학금,<br><span>3초 만에</span> 싹 다 긁어오기</h1>
                     <p class="brand-hero-desc">
-                        드림포켓은 전국 대학생들이 산재된 공공 장학금 정보를 쉽게 탐색하고 비교할 수 있도록 돕는 매칭 내비게이터입니다. 본인의 조건(학점, 소득분위, 거주지, 전공)을 기반으로 가장 적합한 혜택을 매칭하여 공식 공고 페이지로 직접 연결해 드립니다.
+                        몰라서 날린 장학금만 수백만 원 아니신가요? 드림포켓은 대학생들이 귀찮아서, 몰라서 놓치는 공공 장학금을 미친 듯이 뒤져옵니다. 내 조건(학점, 소득분위, 거주지, 전공)만 넣으면 지금 당장 뽑아먹을 수 있는 장학금을 1초 만에 꽂아드립니다.
                     </p>
                     
                     <!-- Live Stats Dashboard (실제 DB 연동) -->
                     <div class="live-stats-dashboard">
                         <div class="stat-card">
-                            <span class="stat-num" id="hero-sch-count">--</span>
+                            <span class="stat-num text-primary" id="hero-sch-count">--</span>
                             <span class="stat-lbl">실시간 연동 공고</span>
                         </div>
                         <div class="stat-card">
-                            <span class="stat-num" id="hero-update-time">--</span>
+                            <span class="stat-num text-success" id="hero-update-time">--</span>
                             <span class="stat-lbl">최근 데이터 갱신</span>
                         </div>
                     </div>
@@ -115,15 +115,14 @@
                     <div class="realtime-ticker-wrapper">
                         <div class="ticker-header">
                             <i class="fa-solid fa-bolt text-warning pulse-fast"></i>
-                            <span>이런 분들이 장학금을 찾고 있어요</span>
-                            <span style="font-size:10px;color:#64748b;margin-left:8px;">(서비스 예시)</span>
+                            <span>지금 이 순간에도 혜택을 찾아가고 있어요!</span>
                         </div>
                         <div class="ticker-body">
                             <div class="ticker-track">
-                                <div class="ticker-item">💡 사범대학 학생 → '서울희망 장학금' 매칭 사례</div>
-                                <div class="ticker-item">⚡ 컴퓨터공학과 학생 → '이공계 청년 장학금' 매칭 사례</div>
-                                <div class="ticker-item">🎉 경영학과 학생 → '상경계열 전문 인재 장학금' 매칭 사례</div>
-                                <div class="ticker-item">🔥 국어국문학과 학생 → '지역 인재 우대 장학금' 매칭 사례</div>
+                                <div class="ticker-item">💸 사범대학생 → '서울희망 장학금' (200만 원) 매칭 성공!</div>
+                                <div class="ticker-item">🔥 컴퓨터공학과 → '이공계 국가우수 장학금' (전액) 매칭 성공!</div>
+                                <div class="ticker-item">🎉 경영학과 → '상경계 전문 인재 장학금' (150만 원) 매칭 성공!</div>
+                                <div class="ticker-item">🚀 국어국문학과 → '지역 인재 우대 장학금' (300만 원) 매칭 성공!</div>
                             </div>
                         </div>
                     </div>
@@ -132,16 +131,16 @@
                 <!-- Right Column: Welcome Onboarding Stepper Entry Card -->
                 <div class="welcome-box glass-panel">
                     <div class="gem-animation-wrap">
-                        <i class="fa-solid fa-wallet pulsing-gem-main"></i>
+                        <i class="fa-solid fa-sack-dollar pulsing-gem-main text-warning"></i>
                     </div>
-                    <h2 class="welcome-title">내 조건에 맞는 숨겨진<br><span>장학 혜택</span>을 주머니에 담아보세요!</h2>
+                    <h2 class="welcome-title">놓치면 억울한 장학금,<br>지금 바로 <span>쓸어 담으세요!</span></h2>
                     <p class="welcome-subtitle">
-                        번거로운 회원가입 없이 학점, 소득분위, 전공, 지역 단 4가지 조건으로<br>현재 즉시 신청 가능한 유용한 공공 장학금을 정밀 비교하고 공식 공고로 연결해 드립니다.
+                        회원가입? <strong>없습니다.</strong> 학점, 소득분위, 전공, 지역 단 4개만 찍으세요.<br>숨어있는 진짜 공공 장학금들만 추려서 바로 입금 좌표로 안내합니다.
                     </p>
                     
-                    <button type="button" class="start-btn" id="start-survey-btn">
-                        <span>3초 만에 내 드림포켓 열기</span>
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                    <button type="button" class="start-btn pulse-button" id="start-survey-btn">
+                        <span>내 장학금 싹 다 긁어보기</span>
+                        <i class="fa-solid fa-rocket"></i>
                     </button>
                 </div>
                 
@@ -349,6 +348,19 @@
                     <a href="/" class="share-action-btn" style="display:inline-flex; text-decoration:none; margin: 0 auto; font-size: 0.8rem; padding: 8px 16px;">나도 내 장학금 매칭해보기 <i class="fa-solid fa-magic"></i></a>
                 </div>
 
+                <!-- Kakao Notification Subscribe Banner (New) -->
+                <!-- 배포 전 내부 로직 확정 시까지 임시 숨김 처리: style="display: none;" 추가 -->
+                <div class="subscribe-banner glass-panel" id="subscribe-banner" style="display: none;">
+                    <div class="sub-banner-content">
+                        <i class="fa-solid fa-comment-dots text-warning pulse-fast" style="font-size: 1.8rem;"></i>
+                        <div class="sub-banner-text">
+                            <h3>새 장학금 공고가 뜨면 카톡으로 알려드릴까요?</h3>
+                            <p>내 조건에 딱 맞는 장학금이 올라오면 놓치지 않게 제일 먼저 쏴드립니다.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="sub-action-btn pulse-button" id="open-subscribe-modal">알림톡 무료 신청 🔥</button>
+                </div>
+
                 <!-- Tab Controls -->
                 <div class="tabs-header">
                     <button class="tab-btn active" id="tab-success">
@@ -438,6 +450,40 @@
                         <li>한국장학재단 누리집 또는 모바일 앱의 [소득구간 모의계산] 메뉴에서 가구 소득과 재산을 입력해 모의 산출해 볼 수 있습니다.</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Subscribe Modal -->
+    <div class="modal-overlay" id="subscribe-modal">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>🔥 신규 장학금 카톡 알림 신청</h3>
+                <button type="button" class="close-modal" id="close-subscribe-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
+                    현재 검색하신 <strong id="sub-cond-preview" style="color:var(--primary);">학점/지역/소득</strong> 조건에 딱 맞는 장학금이 새로 올라오면 카카오톡으로 즉시 알려드립니다.
+                </p>
+                
+                <form id="subscribe-form">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display:block; font-size: 0.85rem; font-weight:700; margin-bottom: 8px;">휴대폰 번호 (숫자만 입력)</label>
+                        <input type="tel" id="sub-phone" placeholder="01012345678" required 
+                               style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; outline:none;">
+                    </div>
+                    
+                    <div style="margin-bottom: 25px; background: rgba(245, 158, 11, 0.05); padding: 12px; border-radius: 8px; border: 1px dashed rgba(245, 158, 11, 0.3);">
+                        <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="sub-agree" required style="margin-top: 3px;">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+                                [필수] 개인정보 수집 및 이용 동의. 수집된 연락처는 맞춤 장학금 알림 발송 목적 외에는 절대 사용되지 않으며 언제든 철회 가능합니다.
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="start-btn pulse-button" style="width: 100%; justify-content: center;">알림 신청 완료하기</button>
+                </form>
             </div>
         </div>
     </div>
