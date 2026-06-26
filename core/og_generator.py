@@ -42,11 +42,10 @@ def generate_og_image(major: str, total_amount: int) -> bytes:
 
     # 3. Prepare texts
     amount_str = f"{total_amount:,}원" if total_amount > 0 else "N백만 원"
-    major_display = major if major else "우리 학과"
     
-    text1 = f"나만 몰랐던 {major_display} 장학금"
+    text1 = "나만 몰랐던 숨은 장학금"
     text2 = f"총 {amount_str}"
-    text3 = "드림포켓에서 내 조건으로 3초 만에 싹 다 찾기"
+    text3 = "내 조건으로 3초 만에 무료 확인하기"
     
     # Helper to get width
     def get_text_width(text, font):
