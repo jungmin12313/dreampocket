@@ -14,6 +14,18 @@ def clean_database():
     
     db.execute_query("DELETE FROM scholarships WHERE source LIKE '%dreamspon%'", commit=True)
     
+    # 1.5. Remove 15 Mock Regional Data (더미 데이터 삭제)
+    mock_keywords = [
+        '[부산인재]', '[대구재단]', '[인천재단]', '[대전청년]', '[울산재단]', 
+        '[세종인재]', '[경기교육장학재단]', '[강원인재]', '[충북인재]', 
+        '[충남진흥]', '[전북장학진흥]', '[전북인재]', '[전남진흥]', '[경북재단]', 
+        '[경남재단]', '[제주진흥]'
+    ]
+    for kw in mock_keywords:
+        db.execute_query("DELETE FROM scholarships WHERE title LIKE ?", (f'%{kw}%',), commit=True)
+    
+    print("[DB Clean] Removed mock regional scholarships.")
+    
     # 2. Remove Duplicates by title
     all_schs = db.execute_query("SELECT id, title, collected_at FROM scholarships", fetchall=True)
     
