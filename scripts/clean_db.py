@@ -1,32 +1,48 @@
-import sqlite3
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core.database import db
 
 def clean_database():
-    db_path = "d:/bot/data/antigravity_bot.db"
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    irrelevant_keywords = [
-        '결과', '커뮤니티', '발표', '합격자', '수기', '후기', '게시판', '기자단', 
-        '서포터즈', '명단', '수여식', '꿀팁', 'MOU', '드림스폰', '지급요청서', 
-        '사전교육', '반환', '포기', '모니터링', '영상안내', '교육영상', '설명회', 
-        '사용내역', '보고서', '간담회', '발대식', '수혜자', '수정공고', '지급 안내', '변경 안내'
-    ]
+    print("[DB Clean] Starting Database Cleanup...")
     
-    # Check both title and source URL logic or just title for spam keywords
-    deleted_count = 0
-    cursor.execute('SELECT id, title FROM scholarships')
-    rows = cursor.fetchall()
+    # 1. Remove Dreamspon
+    rows = db.execute_query("SELECT count(*) as cnt FROM scholarships WHERE source LIKE '%dreamspon%'", fetchone=True)
+    cnt = rows[0] if isinstance(rows, tuple) else rows['cnt']
+    print(f"[DB Clean] Found {cnt} Dreamspon scholarships to delete.")
     
-    for row in rows:
-        sch_id, title = row
-        if any(kw in title for kw in irrelevant_keywords):
-            cursor.execute('DELETE FROM scholarships WHERE id = ?', (sch_id,))
-            deleted_count += 1
-            print(f"Deleted spam entry: {title}")
-
-    conn.commit()
-    conn.close()
-    print(f"\nDB Cleansing Complete. Total {deleted_count} spam entries removed.")
+    db.execute_query("DELETE FROM scholarships WHERE source LIKE '%dreamspon%'", commit=True)
+    
+    # 2. Remove Duplicates by title
+    all_schs = db.execute_query("SELECT id, title, collected_at FROM scholarships", fetchall=True)
+    
+    title_map = {}
+    for sch in all_schs:
+        s_id = sch['id'] if isinstance(sch, dict) else sch[0]
+        s_title = sch['title'] if isinstance(sch, dict) else sch[1]
+        s_date = sch['collected_at'] if isinstance(sch, dict) else sch[2]
+        
+        norm_t = db.normalize_title(s_title)
+        if norm_t not in title_map:
+            title_map[norm_t] = []
+        title_map[norm_t].append({"id": s_id, "date": s_date})
+    
+    to_delete = []
+    for norm_t, items in title_map.items():
+        if len(items) > 1:
+            # Sort by date descending
+            items.sort(key=lambda x: x['date'], reverse=True)
+            # Keep the first (latest), mark others for deletion
+            for old_item in items[1:]:
+                to_delete.append(old_item['id'])
+                
+    if to_delete:
+        print(f"[DB Clean] Found {len(to_delete)} duplicate scholarships. Deleting...")
+        for id_val in to_delete:
+            db.execute_query("DELETE FROM scholarships WHERE id = ?", (id_val,), commit=True)
+            
+    print("[DB Clean] Cleanup Complete!")
 
 if __name__ == "__main__":
     clean_database()

@@ -1,0 +1,970 @@
+{
+  "results": {
+    "gap_matches": [
+      {
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 80,
+        "gaps": [
+          "⚠️ 학점이 0.3점 부족합니다. (요구: 3.8 이상)"
+        ],
+        "id": 82,
+        "is_verified": 0,
+        "link": "https://www.cmkfoundation-scholarship.org/apply",
+        "period": "2026.05.10 ~ 2026.06.10",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[현대차정몽구재단] 2026 문화예술 및 사회과학(경영학 포함) 미래학문 인재 선발 (학점 3.8 이상)"
+      }
+    ],
+    "success_matches": [
+      {
+        "amount_est": 0,
+        "analysis_status": "관리자 검증",
+        "category": "국가 장학금",
+        "confidence": 100,
+        "gaps": [],
+        "id": 1017,
+        "is_verified": 1,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?ctgrId1=0000000002",
+        "period": "2026.05.01 ~ 2026.06.30",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "국가 지원 (신뢰도 최상)",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)",
+          "소득분위 요건 충족 (내 분위 1 <= 8구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 65,
+        "title": "[AI추천] 2026 한국장학재단 우수 인재 장학금 (학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 956,
+        "is_verified": 0,
+        "link": "http://www.daeguedu.or.kr/contents/contents.do?contentsNo=156",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 5구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[대구재단] 대구 사랑 희망 장학 프로그램 (소득분위 5구간 이하 우대)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 958,
+        "is_verified": 0,
+        "link": "https://www.dhrdf.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 4구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[대전청년] 대전 드림스타트 청년 장학금 (소득분위 4구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 960,
+        "is_verified": 0,
+        "link": "https://www.sjhle.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 3구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[세종인재] 세종 행복 더함 장학금 (소득분위 3구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 962,
+        "is_verified": 0,
+        "link": "https://www.gwd.go.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 6구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[강원인재] 강원 특별자치도 미래인재 육성 장학금 (소득분위 6구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 964,
+        "is_verified": 0,
+        "link": "https://www.clehrd.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 4구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[충남진흥] 충남 꿈나무 청년 희망 장학 프로그램 (소득분위 4구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 967,
+        "is_verified": 0,
+        "link": "https://www.gtlef.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 3구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[경북재단] 경상북도 고향사랑 인재 육성 장학금 (소득분위 3구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 106,
+        "is_verified": 0,
+        "link": "http://www.daeguedu.or.kr/contents/contents.do?contentsNo=156",
+        "period": "2026.05.15 ~ 2026.06.10",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 5구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[대구인재] 2026 대구 사랑 대규모 희망 장학금 (소득분위 5구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 112,
+        "is_verified": 0,
+        "link": "https://www.gwd.go.kr",
+        "period": "2026.05.15 ~ 2026.06.15",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "소득분위 요건 충족 (내 분위 1 <= 6구간)",
+          "저소득층 지원 우대 가중치 적용"
+        ],
+        "score": 47,
+        "title": "[강원인재] 2026 강원 미래인재 육성 장학금 (소득분위 6구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1791,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9045",
+        "period": "2026.05.20 ~ 2026.07.05 (마감 46일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[글로벌한상드림] 한상드림 장학금(2026)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1788,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9039",
+        "period": "2026.05.20 ~ 2026.05.20 (마감 0일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[국립국제교육원] 국립국제교육원 국비유학생 선발 (2026년)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1786,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9040",
+        "period": "2026.05.20 ~ 2026.05.20 (마감 0일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[아셈듀오] DUO-Korea 펠로우십 모집 (2026년)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1694,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9037",
+        "period": "2026.05.19 ~ 2026.05.19 (마감 0일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[한미교육위원단] 풀브라이트 미국 대학원 유학장학 (2027년)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1553,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9035",
+        "period": "2026.05.18 ~ 2026.05.18 (마감 0일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[아셈듀오] DUO-Sweden 장학 (2026년)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 615,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9033",
+        "period": "2026.05.12 ~ 2026.05.15 (마감 3일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[성동구장학재단] 성동구장학재단 장학 (2026년 상반기)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 612,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9031",
+        "period": "2026.05.12 ~ 2026.05.14 (마감 2일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[한국통신학회] 한국통신학회 장학"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 611,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9030",
+        "period": "2026.05.12 ~ 2026.05.13 (마감 1일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[생명보험사회공헌위원회] 생명보험협회 해외박사 장학 (2026년)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 471,
+        "is_verified": 0,
+        "link": "https://www.dreamspon.com/scholarship/view.html?idx=9028",
+        "period": "2026.05.11 ~ 2026.05.11 (마감 0일 전)",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[한국고등교육재단] 고등교육재단 인재림 장학 (6기)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 435,
+        "is_verified": 0,
+        "link": "https://www.sdream.or.kr",
+        "period": "2026.05.15 ~ 2026.06.15",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 40,
+        "title": "[삼성꿈장학재단] 2026 대학 꿈장학생 선발 (학점 3.0 이상, 소득 5구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 436,
+        "is_verified": 0,
+        "link": "https://foundation.miraeasset.com",
+        "period": "2026.05.01 ~ 2026.05.28",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[미래에셋박현주재단] 제31기 해외 교환장학생 선발 (교환학생 파견 예정자 대상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 437,
+        "is_verified": 0,
+        "link": "https://www.postf.org",
+        "period": "2026.05.10 ~ 2026.06.05",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 40,
+        "title": "[포스코청암재단] 2026 포스코 비전 장학생 선발 (제철소 연고지 대학생 우대, 학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 438,
+        "is_verified": 0,
+        "link": "https://www.kakaoimpact.org",
+        "period": "2026.05.20 ~ 2026.06.20",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[카카오임팩트재단] 2026 IT/SW 인재 육성 장학금 (컴퓨터공학 및 AI 전공자 우대)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 439,
+        "is_verified": 0,
+        "link": "https://www.lottefoundation.or.kr",
+        "period": "2026.05.05 ~ 2026.05.30",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 40,
+        "title": "[롯데장학재단] 제43기 희망장학생 선발 (상경/이공계 전공, 학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 440,
+        "is_verified": 0,
+        "link": "https://www.iljufoundation.org",
+        "period": "2026.05.01 ~ 2026.05.25",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[일주학술문화재단] 2026 인문학/사회과학 청년 우수 장학생 선발 (인문계열 전공자)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "민간 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 452,
+        "is_verified": 0,
+        "link": "https://www.arko.or.kr",
+        "period": "2026.05.15 ~ 2026.06.15",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "민간 기업/재단 장학"
+        ],
+        "score": 40,
+        "title": "[한국문화예술위원회] 2026년 문화예술/디자인 전공 대학생 장학 사업 (예체능계열)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 3,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20850",
+        "period": "2026.05.06",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 대학원 대통령과학장학금 업무처리기준"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 2,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20861",
+        "period": "2026.05.08",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 복권기금 꿈사다리 우수 장학사업 신규장학생 선발 관련 수급자격 소명 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1538,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20886",
+        "period": "2026.05.18",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026학년도 2학기 1차 주거안정장학금 신청 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1537,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20888",
+        "period": "2026.05.18",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 박사우수장학금(이공계) 업무처리기준"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1536,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20889",
+        "period": "2026.05.18",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 국가근로장학금 하계방학 집중근로 프로그램 희망근로지 학생 신청 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1677,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20890",
+        "period": "2026.05.19",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 2학기 국가장학금 1차 신청 일정 및 신청매뉴얼 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 1771,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20892",
+        "period": "2026.05.19",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 하계방학 집중근로 프로그램 근로기관 승인 여부 확인 안내(대상: 근로기관)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "전공",
+        "confidence": 80,
+        "gaps": [],
+        "id": 449,
+        "is_verified": 0,
+        "link": "https://www.kofac.re.kr",
+        "period": "2026.05.01 ~ 2026.05.31",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 35,
+        "title": "[한국과학창의재단] 2026년 이공계 대학생 국가우수장학금 (이공계/자연과학 전공, 학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "전공",
+        "confidence": 80,
+        "gaps": [],
+        "id": 451,
+        "is_verified": 0,
+        "link": "https://www.kpc.or.kr",
+        "period": "2026.05.12 ~ 2026.05.29",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 35,
+        "title": "[한국생산성본부] 2026년 상경계열(경영/경제/회계) 전문 실무 장학금 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "전공",
+        "confidence": 65,
+        "gaps": [],
+        "id": 22,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?ctgrId1=0000000002",
+        "period": "2026.05.10 ~ 2026.06.15",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "경영학부 전공자를 위한 푸른등대 희망 장학금"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 8,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20823",
+        "period": "2026.04.24",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "2026년 1학기 국가근로장학금 추가 신청기간 운영 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 4,
+        "is_verified": 0,
+        "link": "https://www.kosaf.go.kr/ko/notice.do?mode=view&searchStr=&searchType=&page=1&ctgrId1=0000000002&ctgrId2=&seqNo=20847",
+        "period": "2026.04.30",
+        "reasons": [
+          "전국구 공고 (거주지 무관 신청 가능)"
+        ],
+        "score": 35,
+        "title": "국가우수장학금(이공계) 성적우수 및 재학중우수자(2년지원) 대학추천자 학생신청 안내"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 955,
+        "is_verified": 0,
+        "link": "https://www.busan.go.kr/young",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[부산인재] 하반기 부산 청년 미래 디딤돌 장학금 (학점 3.0 이상 신청 가능)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 957,
+        "is_verified": 0,
+        "link": "https://www.itle.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 32,
+        "title": "[인천재단] 인천 우수 대학생 인재 육성 장학금 (학점 3.5 이상 신청 가능)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 959,
+        "is_verified": 0,
+        "link": "https://uill.uri.re.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.2 요구)"
+        ],
+        "score": 32,
+        "title": "[울산재단] 울산 청년 리더 육성 학업 지원금 (학점 3.2 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 961,
+        "is_verified": 0,
+        "link": "https://www.ggwf.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[경기도민] 경기도 연고 대학생 장학 지원 프로그램 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 963,
+        "is_verified": 0,
+        "link": "https://www.cbitle.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[충북재단] 충청북도 지역 인재 활성화 지원 장학금 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 965,
+        "is_verified": 0,
+        "link": "https://www.jinjae.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.2 요구)"
+        ],
+        "score": 32,
+        "title": "[전북인재] 전북도민 사랑 지역인재 육성 장학금 (학점 3.2 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 966,
+        "is_verified": 0,
+        "link": "https://www.jntle.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 32,
+        "title": "[전남진흥] 전남 으뜸 미래 인재 장학 지원사업 (학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 968,
+        "is_verified": 0,
+        "link": "https://www.gninjae.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[경남재단] 경상남도 청년 희망 사다리 장학금 (학점 3.0 이상 신청 가능)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 969,
+        "is_verified": 0,
+        "link": "https://www.jiles.or.kr",
+        "period": "상시 (재단 공고 수시 확인 필요)",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 32,
+        "title": "[제주진흥] 제주 특별자치도 청년 핵심 리더 장학금 (학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 441,
+        "is_verified": 0,
+        "link": "https://www.syf.or.kr",
+        "period": "2026.05.01 ~ 2026.05.29",
+        "reasons": [
+          "지역 연고 우대 장학"
+        ],
+        "score": 32,
+        "title": "[성남시청소년재단] 2026년 성남시 연고 우수 장학생 선발 (성남시 1년 이상 거주자)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 442,
+        "is_verified": 0,
+        "link": "https://www.gcyf.or.kr",
+        "period": "2026.05.10 ~ 2026.06.02",
+        "reasons": [
+          "지역 연고 우대 장학"
+        ],
+        "score": 32,
+        "title": "[고양시청소년재단] 2026년 고양 평화 장학생 선발 (고양시 주민, 소득 6구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 444,
+        "is_verified": 0,
+        "link": "https://www.yiyf.or.kr",
+        "period": "2026.05.05 ~ 2026.05.26",
+        "reasons": [
+          "지역 연고 우대 장학"
+        ],
+        "score": 32,
+        "title": "[용인시시민장학회] 2026년 용인 청년 희망 장학생 모집 (용인 연고 대학생 대상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 445,
+        "is_verified": 0,
+        "link": "https://www.changwon.go.kr",
+        "period": "2026.05.15 ~ 2026.06.10",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[창원장학회] 2026년 창원 연고 대학생 생활조합 장학금 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 65,
+        "gaps": [],
+        "id": 447,
+        "is_verified": 0,
+        "link": "https://www.cheongju.go.kr",
+        "period": "2026.05.15 ~ 2026.06.12",
+        "reasons": [
+          "지역 연고 우대 장학"
+        ],
+        "score": 32,
+        "title": "[청주시인재양성재단] 2026년 청주 연고 대학생 특별 장학 지원 (소득 5구간 이하)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 448,
+        "is_verified": 0,
+        "link": "http://www.casf.or.kr",
+        "period": "2026.05.10 ~ 2026.06.01",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.5 요구)"
+        ],
+        "score": 32,
+        "title": "[천안사랑장학재단] 2026년 천안 우수 청년 희망 사다리 장학금 (학점 3.5 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 111,
+        "is_verified": 0,
+        "link": "https://www.ggwf.or.kr",
+        "period": "2026.05.01 ~ 2026.05.31",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[경기도민회] 2026 경기도 연고 대학생 장학 지원 프로그램 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 113,
+        "is_verified": 0,
+        "link": "https://www.cbitle.or.kr",
+        "period": "2026.05.10 ~ 2026.05.30",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[충북재단] 2026 충청북도 지역 인재 활성화 지원 장학금 (학점 3.0 이상)"
+      },
+      {
+        "amount_est": 0,
+        "analysis_status": "제목 분석",
+        "category": "지자체 장학금",
+        "confidence": 80,
+        "gaps": [],
+        "id": 118,
+        "is_verified": 0,
+        "link": "https://www.gninjae.or.kr",
+        "period": "2026.05.01 ~ 2026.05.25",
+        "reasons": [
+          "지역 연고 우대 장학",
+          "성적 조건 충족 (학점 3.5 >= 3.0 요구)"
+        ],
+        "score": 32,
+        "title": "[경남재단] 2026 경상남도 청년 희망 사다리 장학 프로그램 (학점 3.0 이상)"
+      }
+    ],
+    "total_potential_amount": 0
+  },
+  "success": true,
+  "user_profile": {
+    "gpa": "3.5",
+    "income": "1",
+    "location": "",
+    "major": "",
+    "user_id": "guest_user"
+  }
+}

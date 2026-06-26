@@ -8,21 +8,27 @@
     <meta name="google-site-verification" content="0frELhlakp9WJzv8vTesUaZDgBVwQ5OIqAUhp3ZMCpw" />
     
     <meta name="description" content="{{ seo_desc }}">
-    <meta name="keywords" content="대학생 장학금, 맞춤 장학금, 소득분위 장학금, 장학금 매칭, 드림포켓, 국가장학금, 지자체 장학금, 청년 장학금">
+    <meta name="keywords" content="대학생 장학금, 맞춤 장학금, 소득분위 장학금, 장학금 매칭, 드림포켓, 국가장학금, 지자체 장학금, 청년 장학금, 생활비 장학금, 우수 장학금">
+    <meta name="author" content="드림포켓">
     <title>{{ seo_title }}</title>
     
     <!-- Canonical & Indexing Control -->
     <link rel="canonical" href="{{ request.base_url }}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     
     <!-- OpenGraph SEO Tags -->
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="ko_KR">
     <meta property="og:title" content="{{ seo_title }}">
     <meta property="og:description" content="{{ seo_desc }}">
     <meta property="og:url" content="{{ request.base_url }}">
     <meta property="og:site_name" content="드림포켓 (DreamPocket)">
     <meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png?v=1.2">
+    <meta property="og:image:alt" content="드림포켓 대학생 맞춤 장학금 매칭 플랫폼">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ seo_title }}">
+    <meta name="twitter:description" content="{{ seo_desc }}">
+    <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png?v=1.2">
     
     <!-- JSON-LD Structured Data for Search Engine Rich Snippets -->
     <script type="application/ld+json">

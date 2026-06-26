@@ -84,9 +84,9 @@ def admin_required(f):
 
 def render_home(preset_region="", preset_major="", seo_title=None, seo_desc=None):
     if not seo_title:
-        seo_title = "드림포켓 | 대학생 맞춤 장학금 실시간 매칭"
+        seo_title = "드림포켓 | 대학생 맞춤 장학금 및 국가장학금 실시간 매칭 검색"
     if not seo_desc:
-        seo_desc = "드림포켓에서 3초 만에 나에게 딱 맞는 대학생 맞춤 장학금을 찾아보세요! 학점, 소득분위, 거주지, 전공만 입력하면 실시간으로 분석하여 매칭해 드립니다."
+        seo_desc = "드림포켓에서 나에게 딱 맞는 대학생 맞춤 장학금을 찾아보세요. 국가장학금, 지자체 장학금, 전공별 장학금 혜택을 학점, 소득분위, 거주지로 3초 만에 무료 매칭해 드립니다."
         
     return render_template(
         "index.html", 
@@ -103,15 +103,15 @@ def home():
 @app.route("/region/<region_name>")
 def region_home(region_name):
     # e.g. 부산광역시
-    seo_title = f"{region_name} 대학생 장학금 찾기 - 드림포켓"
-    seo_desc = f"{region_name} 거주 대학생을 위한 지자체 장학금 및 지원 혜택을 드림포켓에서 3초 만에 확인하세요."
+    seo_title = f"{region_name} 대학생 장학금 및 지원금 조회 - 드림포켓"
+    seo_desc = f"{region_name} 거주 대학생을 위한 지역 지자체 장학금, 학자금 대출 이자 지원 등 숨은 혜택을 드림포켓에서 3초 만에 확인하세요."
     return render_home(preset_region=region_name, seo_title=seo_title, seo_desc=seo_desc)
 
 @app.route("/major/<major_name>")
 def major_home(major_name):
     # e.g. 컴퓨터공학과
-    seo_title = f"{major_name} 전공 대학생 장학금 찾기 - 드림포켓"
-    seo_desc = f"{major_name} 학생들을 위한 학과 맞춤형 전공 장학금을 실시간으로 매칭해 드립니다."
+    seo_title = f"{major_name} 대학생 전공 장학금 및 우수 혜택 조회 - 드림포켓"
+    seo_desc = f"{major_name} 학생들을 위한 학과 맞춤형 전공 장학금, 이공계/인문계 우수 장학금을 실시간으로 매칭하고 추천해 드립니다."
     return render_home(preset_major=major_name, seo_title=seo_title, seo_desc=seo_desc)
 
 @app.route("/robots.txt")
@@ -331,118 +331,30 @@ def match_scholarships():
         location = data.get("location", "")
         major = data.get("major", "")
 
-        # Create virtual user profile
-        user_profile = {
-            "user_id": "guest_user",
-            "gpa": gpa,
-            "income": income,
-            "location": location,
-            "major": major
-        }
-
-        # Dynamic major parsing to boost matching rates
-        # If user types "컴퓨터공학과", clean it to match with "컴퓨터" or "공학"
         clean_major = major.strip()
         for suffix in ["공학과", "학과", "학부", "과"]:
             if clean_major.endswith(suffix) and len(clean_major) > len(suffix):
                 clean_major = clean_major[:-len(suffix)]
                 break
 
-        # Calculate scores against all scholarships
-        all_scholarships = db.get_all_scholarships()
-        success_matches = []
-        gap_matches = []
+        user_profile = {
+            "user_id": "guest_user",
+            "gpa": gpa,
+            "income": income,
+            "location": location,
+            "major": clean_major
+        }
 
-        for sch in all_scholarships:
-            # Skip closed, expired, or verified dead links
-            if sch.get("status") in ["마감", "만료", "비활성"]:
-                continue
-                
-            # We temporarily use a modified profile for the core matching engine matching
-            # but preserve original for details if needed. Let's do a smart matching:
-            # We inject the clean_major into the category check if applicable
-            temp_profile = user_profile.copy()
-            temp_profile["major"] = clean_major
-            
-            analysis = brain.calculate_score(temp_profile, sch)
-
-            
-            item = {
-                "id": sch["id"],
-                "category": sch["category"],
-                "title": sch["title"],
-                "score": analysis["score"],
-                "reasons": analysis["reasons"],
-                "link": sch["source"],
-                "period": sch["period"],
-                "gaps": analysis["gaps"],
-                "confidence": analysis["confidence"],
-                "analysis_status": analysis["analysis_status"],
-                "is_verified": analysis["is_verified"]
-            }
-
-            # If eligible and score is high enough (at least 20 or category match)
-            if analysis["is_eligible"] and analysis["score"] >= 20:
-                success_matches.append(item)
-            elif not analysis["is_eligible"] and analysis["is_potential"]:
-                gap_matches.append(item)
-
-        # Calculate total potential benefit amount (보수적: 금액이 명시된 항목만 합산)
-        total_potential_amount = 0
-        for item in success_matches:
-            # Re-fetch sch to get benefit_amount
-            # Since all_scholarships is accessible here and item['id'] matches sch['id']
-            # We already have sch locally if we do it in the first loop. Let's do it cleaner:
-            # We can find the original sch object
-            sch = next((s for s in all_scholarships if s["id"] == item["id"]), None)
-            amount_est = 0
-            
-            if sch and sch.get('benefit_amount'):
-                amount_str = sch['benefit_amount']
-                if '전액' in amount_str:
-                    amount_est = 3500000
-                else:
-                    nums = re.findall(r'(\d+)', amount_str.replace(',', ''))
-                    if nums:
-                        val = int(nums[0])
-                        if '억' in amount_str: val *= 100000000
-                        elif '만' in amount_str or val < 10000: val *= 10000
-                        amount_est = val
-
-            if amount_est == 0:
-                amount_match = re.search(r'(\d+)만\s*원?', item['title'])
-                if amount_match:
-                    amount_est = int(amount_match.group(1)) * 10000
-                elif '전액' in item['title']:
-                    amount_est = 3500000  # Avg tuition
-                elif '생활비' in item['title']:
-                    amount_est = 1000000
-                # else: 기본값(0)을 유지하여 허수 합산 방지
-
-            item['amount_est'] = amount_est
-            # 명시된 금액이 있는 경우만 총액에 합산
-            if amount_est > 0:
-                total_potential_amount += amount_est
-
-        # Sort descending by score
-        success_matches = sorted(success_matches, key=lambda x: x["score"], reverse=True)
-        gap_matches = sorted(gap_matches, key=lambda x: x["score"], reverse=True)
-
-        # Filter out loan-related scholarships (대출 관련 제외)
-        LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보']
-        def is_loan_related(title):
-            return any(kw in title for kw in LOAN_KEYWORDS)
-
-        success_matches = [m for m in success_matches if not is_loan_related(m['title'])]
-        gap_matches = [m for m in gap_matches if not is_loan_related(m['title'])]
-
+        # Calculate scores against all scholarships via the brain
+        result = brain.get_matches(user_profile)
+        
         return jsonify({
             "success": True,
             "user_profile": user_profile,
             "results": {
-                "success_matches": success_matches,
-                "gap_matches": gap_matches,
-                "total_potential_amount": total_potential_amount
+                "success_matches": result["success_matches"],
+                "gap_matches": result["gap_matches"],
+                "total_potential_amount": result["total_potential_amount"]
             }
         })
     except Exception as e:

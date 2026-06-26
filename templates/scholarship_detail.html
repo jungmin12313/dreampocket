@@ -3,31 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ sch.title }} - 신청 기간, 수혜 조건, 공식 공고 링크를 드림포켓에서 확인하고 나에게 맞는 혜택을 놓치지 마세요.">
-    <meta name="keywords" content="드림포켓, 대학생 장학금, {{ sch.category }}, 맞춤 장학금">
-    <title>{{ sch.title }} | 드림포켓 장학금 상세정보</title>
+    <meta name="description" content="{{ sch.title }} - 지원 대상, 신청 기간({{ sch.period }}), 공식 공고 등 상세 정보를 드림포켓에서 확인하세요. 나에게 맞는 장학금 혜택을 쉽게 찾아 신청할 수 있습니다.">
+    <meta name="keywords" content="드림포켓, 대학생 장학금, {{ sch.category }}, 맞춤 장학금, 장학금 신청, {{ sch.title }}">
+    <meta name="author" content="드림포켓">
+    <title>{{ sch.title }} 지원 조건 및 신청 방법 | 드림포켓 장학금 조회</title>
     
     <!-- Canonical & Indexing Control -->
     <link rel="canonical" href="{{ request.base_url }}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     
     <!-- OpenGraph SEO Tags -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{{ sch.title }}">
-    <meta property="og:description" content="{{ sch.title }} - 신청 기간, 수혜 조건, 공식 공고 링크를 드림포켓에서 확인하고 나에게 맞는 혜택을 놓치지 마세요.">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:title" content="{{ sch.title }} | 드림포켓 장학금 매칭">
+    <meta property="og:description" content="{{ sch.title }} - 지원 대상, 신청 기간({{ sch.period }}), 공식 공고 등 상세 정보를 드림포켓에서 확인하세요. 나에게 맞는 장학금 혜택을 쉽게 찾아 신청할 수 있습니다.">
     <meta property="og:url" content="{{ request.base_url }}">
     <meta property="og:site_name" content="드림포켓 (DreamPocket)">
     <meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png">
+    <meta property="og:image:alt" content="{{ sch.title }}">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ sch.title }} | 드림포켓">
+    <meta name="twitter:description" content="{{ sch.title }} - 지원 대상, 신청 기간({{ sch.period }}), 상세 혜택을 확인하세요.">
+    <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png">
     
     <!-- JSON-LD Structured Data for Rich Snippet Display -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": "{{ sch.title }}",
-        "description": "{{ sch.title }} - 신청 기간, 수혜 조건, 공식 공고 링크를 드림포켓에서 확인하고 나에게 맞는 혜택을 놓치지 마세요.",
+        "@type": "Article",
+        "headline": "{{ sch.title }} 지원 안내",
+        "description": "{{ sch.title }} - 지원 대상, 신청 기간, 공식 공고 등 상세 혜택 정보를 드림포켓에서 안내합니다.",
         "datePublished": "{{ sch.collected_at if sch.collected_at else '2026-05-19T00:00:00+09:00' }}",
+        "dateModified": "{{ sch.collected_at if sch.collected_at else '2026-05-19T00:00:00+09:00' }}",
         "author": {
             "@type": "Organization",
             "name": "드림포켓 (DreamPocket)",

@@ -3,7 +3,6 @@ from core.matching_engine import brain
 from scrapers.kosaf_scraper import KosafScraper
 from scrapers.seoul_scraper import SeoulScraper
 from scrapers.gwangju_scraper import GwangjuScraper
-from scrapers.dreamspon_scraper import DreamsponScraper
 from scrapers.regional_aggregator import RegionalAggregatorScraper
 from scrapers.campuspick_scraper import CampusPickScraper
 from core.document_analyzer import analyzer
@@ -43,15 +42,8 @@ async def refresh_scholarship_data():
     except Exception as e:
         print(f"Error running GwangjuScraper: {e}")
         
-    # 4. Run Dreamspon Scraper (New)
-    try:
-        dreamspon = DreamsponScraper()
-        dreamspon_results = await dreamspon.fetch_scholarship_list()
-        results.extend(dreamspon_results)
-    except Exception as e:
-        print(f"Error running DreamsponScraper: {e}")
         
-    # 5. Run Regional Aggregator Scraper (New - 17 Provinces)
+    # 4. Run Regional Aggregator Scraper (New - 17 Provinces)
     try:
         regional = RegionalAggregatorScraper()
         regional_results = await regional.fetch_scholarship_list()
@@ -67,6 +59,15 @@ async def refresh_scholarship_data():
     except Exception as e:
         print(f"Error running CampusPickScraper: {e}")
         
+    # Apply loan keywords filter at collection time
+    LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보']
+    for item in results:
+        title = item.get('title', '')
+        if any(kw in title for kw in LOAN_KEYWORDS):
+            item['is_loan'] = 1
+        else:
+            item['is_loan'] = 0
+            
     db.save_scholarships(results)
     
     # 5.5. Link Validation for all active scholarships

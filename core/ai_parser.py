@@ -21,17 +21,16 @@ class ScholarshipAIParser:
 
         prompt = f"""
         당신은 장학금 공고 분석 전문가입니다. 아래 장학금 공고 텍스트를 읽고 반드시 다음 JSON 형식으로만 응답하세요.
-        추출할 수 없는 정보는 null로 표시하세요.
+        추출할 수 없는 정보는 null 또는 기본값으로 표시하세요.
 
         {{
-            "gpa_limit": (float, 예: 3.5),
-            "income_limit": (int, 소득구간 숫자만, 예: 8),
-            "major_restriction": (string, 예: "공학계열", "인문계열" 또는 "전체"),
-            "region_restriction": (string, 예: "서울특별시", "경기도" 또는 "전국"),
-            "benefit_type": "등록금" 또는 "생활비" 또는 "기타",
-            "benefit_amount": (string, 예: "전액", "100만원", "실비지원"),
-            "application_link": (string, 온라인 신청 페이지 URL),
-            "is_closed": (boolean, 모집종료 여부)
+            "region_rule": (string, "nationwide", "local", "restricted" 중 택1. 기본값 "nationwide"),
+            "region_target": (string, local이나 restricted일 경우 지역명(예: "서울특별시"), 아니면 null),
+            "major_rule": (string, "any", "specific", "field_group" 중 택1. 기본값 "any"),
+            "major_target": (string, specific/field_group일 경우 제한전공명(예: "이공계열", "컴퓨터공학"), 아니면 null),
+            "gpa_min": (float, 최소 요구 학점 숫자만, 없으면 0.0),
+            "income_max": (int, 최대 요구 소득구간/분위 숫자만, 없으면 10),
+            "ai_summary": (string, 공고에 대한 1줄 핵심 요약)
         }}
 
         공고 텍스트:
