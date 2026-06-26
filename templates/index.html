@@ -23,12 +23,20 @@
     <meta property="og:description" content="{{ seo_desc }}">
     <meta property="og:url" content="{{ request.base_url }}">
     <meta property="og:site_name" content="드림포켓 (DreamPocket)">
+    {% if url_p %}
+    <meta property="og:image" content="{{ request.url_root.rstrip('/') }}/api/og-image?p={{ url_p }}">
+    {% else %}
     <meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png?v=1.2">
+    {% endif %}
     <meta property="og:image:alt" content="드림포켓 대학생 맞춤 장학금 매칭 플랫폼">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ seo_title }}">
     <meta name="twitter:description" content="{{ seo_desc }}">
+    {% if url_p %}
+    <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/api/og-image?p={{ url_p }}">
+    {% else %}
     <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/og-image.png?v=1.2">
+    {% endif %}
     
     <!-- JSON-LD Structured Data for Search Engine Rich Snippets -->
     <script type="application/ld+json">

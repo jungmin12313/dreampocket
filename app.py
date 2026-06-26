@@ -82,7 +82,7 @@ def admin_required(f):
 
 # Routes
 
-def render_home(preset_region="", preset_major="", seo_title=None, seo_desc=None):
+def render_home(preset_region="", preset_major="", seo_title=None, seo_desc=None, url_p=None):
     if not seo_title:
         seo_title = "드림포켓 | 대학생 맞춤 장학금 및 국가장학금 실시간 매칭 검색"
     if not seo_desc:
@@ -93,12 +93,14 @@ def render_home(preset_region="", preset_major="", seo_title=None, seo_desc=None
         seo_title=seo_title, 
         seo_desc=seo_desc,
         preset_region=preset_region,
-        preset_major=preset_major
+        preset_major=preset_major,
+        url_p=url_p
     )
 
 @app.route("/")
 def home():
-    return render_home()
+    url_p = request.args.get("p")
+    return render_home(url_p=url_p)
 
 @app.route("/region/<region_name>")
 def region_home(region_name):
@@ -391,6 +393,10 @@ os.makedirs("static/js", exist_ok=True)
 daemon = threading.Thread(target=run_auto_refresh, daemon=True)
 daemon.start()
 
+import base64
+from urllib.parse import unquote
+from core.og_generator import generate_og_image
+
 @app.route('/api/admin/clean', methods=['GET'])
 def admin_clean_db():
     try:
@@ -399,6 +405,40 @@ def admin_clean_db():
         return jsonify({"status": "success", "message": "Database cleaned successfully."}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/og-image')
+def og_image():
+    p = request.args.get('p')
+    if not p:
+        # Return a static default OG image or a fallback
+        return app.send_static_file('og-image.png')
+        
+    try:
+        # Decode the payload (e.g. "?p=eyJncGEiOiIzLjUiLCJpbmNvbWUiOiIxIiwibG9jYXRpb24iOiLshJzsmrjsi5wiLCJtYWpvciI6IuqyveyYge2VmeqzvCJ9")
+        decoded_json = base64.b64decode(unquote(p)).decode('utf-8')
+        payload = json.loads(decoded_json)
+        
+        # Run matching to get total amount
+        results = brain.match_scholarships(payload)
+        successes = results.get("success_matches", [])
+        
+        # Filter out loan related
+        LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보']
+        successes = [s for s in successes if not any(k in s['title'] for k in LOAN_KEYWORDS)]
+        
+        total_amount = 0
+        for sch in successes:
+            amt = sch.get('amount_est', 0)
+            if amt > 0 and amt != 500000:
+                total_amount += amt
+                
+        # Generate image
+        img_bytes = generate_og_image(payload.get('major', ''), total_amount)
+        return Response(img_bytes, mimetype='image/png')
+        
+    except Exception as e:
+        print("OG Image Generation Error:", e)
+        return app.send_static_file('og-image.png')
 
 @app.route('/api/subscribe', methods=['POST'])
 def subscribe():
