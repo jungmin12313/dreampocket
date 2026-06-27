@@ -46,7 +46,10 @@ class RegionalAggregatorScraper:
                         "period": "상세 공고 참조",
                         "status": "진행중",
                         "source": link['url'],
-                        "collected_at": today.isoformat()
+                        "collected_at": today.isoformat(),
+                        "region_rule": "local",
+                        "region_target": region,
+                        "benefit_amount": "1500000"
                     }
                     all_results.append(item)
                 

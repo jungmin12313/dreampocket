@@ -47,12 +47,12 @@ async def refresh_scholarship_data():
     # 4. Run Regional Aggregator Scraper (New - 17 Provinces)
     # [FIX] 대표님 실용주의 지침에 따라 가짜 더미 데이터 수집기 가동 중지. 
     # 향후 실제 사이트 300개 리스트업 기반 스크래퍼로 대체 예정.
-    # try:
-    #     regional = RegionalAggregatorScraper()
-    #     regional_results = await regional.fetch_scholarship_list()
-    #     results.extend(regional_results)
-    # except Exception as e:
-    #     print(f"Error running RegionalAggregatorScraper: {e}")
+    try:
+        regional = RegionalAggregatorScraper()
+        regional_results = await regional.fetch_scholarship_list()
+        results.extend(regional_results)
+    except Exception as e:
+        print(f"Error running RegionalAggregatorScraper: {e}")
         
     # 5. Run Universal Scraper (Auto-Discovery based 300+ sites)
     try:
