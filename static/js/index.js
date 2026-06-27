@@ -634,9 +634,26 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             let html = sortInfoHtml;
             stillActiveSuccesses.forEach((sch, idx) => {
-                const reasonsHtml = sch.reasons.map(r => `<span class="reason-badge">✓ ${r}</span>`).join("");
+                const specificTooltipHtml = sch.reasons.map(r => `<div class="match-tip-row" style="padding: 4px 0; color: #e2e8f0; font-size: 0.8rem;"><i class="fa-solid fa-check" style="color:var(--success); margin-right:6px;"></i><span class="match-tip-label">${r}</span></div>`).join("");
                 const displayScore = Math.min(sch.score, 100);
                 const offset = 100 - displayScore;
+
+                // Highlight Badge (중복 수혜 / 생활비 지원)
+                const highlightBadge = sch.is_duplicatable === 1
+                    ? `<span class="category-tag" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #fff; border: none; font-weight: 700; box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);">✨ 생활비·중복수혜</span>`
+                    : `<span class="category-tag">${sch.category || '일반'}</span>`;
+
+                // Minimalist Metadata line
+                let metadataArr = [];
+                if (sch.recruit_count > 0) metadataArr.push(`🔥 ${sch.recruit_count}명 선발`);
+                if (sch.difficulty === 'Low') metadataArr.push(`🟢 서류 간단`);
+                else if (sch.difficulty === 'High') metadataArr.push(`🔴 자소서/추천서 필요`);
+                if (sch.work_required === 1) metadataArr.push(`⚠️ 근로/의무 있음`);
+                else if (sch.work_required === 0) metadataArr.push(`순수 장학금`);
+                
+                const metadataHtml = metadataArr.length > 0
+                    ? `<div style="font-size: 0.75rem; color: #94a3b8; margin-top: 12px; font-weight: 500;">${metadataArr.join(' &nbsp;•&nbsp; ')}</div>`
+                    : '';
 
                 // 링크가 공고 직접 URL인지 확인
                 const isDreamspon = sch.link && sch.link.includes("dreamspon.com");
@@ -661,14 +678,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                             <span class="gauge-label">Match <i class="fa-solid fa-circle-info match-info-icon"></i></span>
                             <div class="match-score-tooltip">
-                                <div class="match-tooltip-title">📊 MATCH 점수 구성</div>
-                                ${tooltipHtml}
-                                <div class="match-tooltip-note">※ 최대 점수 범위 초과 시 100으로 표시됩니다</div>
+                                <div class="match-tooltip-title">📊 MATCH 점수 구성 내역</div>
+                                ${specificTooltipHtml}
+                                <div class="match-tooltip-note" style="margin-top:8px;">※ 최대 점수 범위 초과 시 100으로 표시됩니다</div>
                             </div>
                         </div>
                         <div class="card-main">
                             <div class="trust-badge-row">
-                                <span class="category-tag">${sch.category || '일반'}</span>
+                                ${highlightBadge}
                                 ${calculateDDay(sch.period)}
                             </div>
                             <h3 class="sch-title">${sch.title}</h3>
@@ -677,9 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <span>&nbsp;신청 기간: <strong>${sch.period}</strong></span>
                             </div>
                             ${amtDisplay}
-                            <div class="card-reasons">
-                                ${reasonsHtml}
-                            </div>
+                            ${metadataHtml}
                         </div>
                         <div class="card-action">
                             ${linkWarningHtml}

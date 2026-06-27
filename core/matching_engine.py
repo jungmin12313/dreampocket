@@ -40,6 +40,13 @@ class ScholarshipBrain:
         
         major_target = scholarship.get('major_target')
         
+        # New Feature Fields
+        is_duplicatable = scholarship.get('is_duplicatable')
+        recruit_count = scholarship.get('recruit_count', 0)
+        if recruit_count is None: recruit_count = 0
+        difficulty = scholarship.get('difficulty')
+        work_required = scholarship.get('work_required')
+        
         # 1. Hard Filter Checks
         if gpa_user < gpa_min:
             is_eligible = False
@@ -106,6 +113,23 @@ class ScholarshipBrain:
         if gpa_user >= gpa_min + 0.5 and gpa_min > 0:
             score += 15
             reasons.append("학점 우수 (+15점)")
+            
+        # Next Level Filtering Logic
+        if is_duplicatable == 1:
+            score += 20
+            reasons.append("중복 수혜 가능 (+20점)")
+            
+        if recruit_count > 50:
+            score += 10
+            reasons.append(f"대규모 선발 ({recruit_count}명, +10점)")
+            
+        if difficulty == 'Low':
+            score += 5
+            reasons.append("서류 간단함 (+5점)")
+            
+        if work_required == 1:
+            score -= 10
+            reasons.append("근로/의무 사항 있음 (-10점)")
             
         # Confidence logic
         analysis_status = scholarship.get('analysis_status', '미분석')
@@ -174,7 +198,11 @@ class ScholarshipBrain:
                 "confidence": analysis['confidence'],
                 "analysis_status": analysis['analysis_status'],
                 "is_verified": analysis['is_verified'],
-                "ai_summary": sch.get('ai_summary', '')
+                "ai_summary": sch.get('ai_summary', ''),
+                "is_duplicatable": sch.get('is_duplicatable'),
+                "recruit_count": sch.get('recruit_count', 0),
+                "difficulty": sch.get('difficulty', ''),
+                "work_required": sch.get('work_required', 0)
             }
             
             if analysis['is_eligible'] and analysis['score'] >= 30:
