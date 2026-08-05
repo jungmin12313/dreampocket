@@ -56,7 +56,9 @@ class SeoulScraper:
                         "period": post_date if post_date else "상시",
                         "status": "진행중",
                         "source": source_url,
-                        "collected_at": datetime.now().isoformat()
+                        "collected_at": datetime.now().isoformat(),
+                        "region_rule": "local",
+                        "region_target": "서울"
                     })
                 
                 await browser.close()
@@ -75,7 +77,12 @@ class SeoulScraper:
                     "period": "2026.05.01 ~ 2026.05.25",
                     "status": "진행중",
                     "source": "https://www.hissf.or.kr/info/notice",
-                    "collected_at": now
+                    "collected_at": now,
+                    "region_rule": "local",
+                    "region_target": "서울",
+                    "gpa_min": 3.0,
+                    "major_rule": "any",
+                    "benefit_amount": "2000000"
                 },
                 {
                     "category": "전공",
@@ -83,7 +90,13 @@ class SeoulScraper:
                     "period": "2026.05.10 ~ 2026.06.10",
                     "status": "진행중",
                     "source": "https://www.hissf.or.kr/info/notice",
-                    "collected_at": now
+                    "collected_at": now,
+                    "region_rule": "local",
+                    "region_target": "서울",
+                    "major_rule": "specific",
+                    "major_target": "경영학과, 경제학과",
+                    "gpa_min": 0.0,
+                    "benefit_amount": "3000000"
                 },
                 {
                     "category": "장학금",
@@ -91,7 +104,13 @@ class SeoulScraper:
                     "period": "2026.05.05 ~ 2026.05.30",
                     "status": "진행중",
                     "source": "https://www.hissf.or.kr/info/notice",
-                    "collected_at": now
+                    "collected_at": now,
+                    "region_rule": "local",
+                    "region_target": "서울",
+                    "income_max": 3,
+                    "gpa_min": 0.0,
+                    "major_rule": "any",
+                    "benefit_amount": "1500000"
                 },
                 {
                     "category": "전공",
@@ -99,7 +118,13 @@ class SeoulScraper:
                     "period": "2026.05.15 ~ 2026.06.15",
                     "status": "진행중",
                     "source": "https://www.hissf.or.kr/info/notice",
-                    "collected_at": now
+                    "collected_at": now,
+                    "region_rule": "local",
+                    "region_target": "서울",
+                    "major_rule": "specific",
+                    "major_target": "경영학과, 이공계",
+                    "gpa_min": 3.5,
+                    "benefit_amount": "4000000"
                 }
             ]
             

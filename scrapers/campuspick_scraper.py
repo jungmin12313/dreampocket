@@ -89,64 +89,92 @@ class CampusPickScraper:
                     "title": "[카카오임팩트] 2026 카카오 테크 장학금 (전공 무관, IT 관심자)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=14)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/kakao",
-                    "collected_at": now.isoformat()
+                    "source": "https://www.kakaoimpact.org/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "any",
+                    "gpa_min": 0.0,
+                    "benefit_amount": "2000000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[네이버커넥트재단] 2026 청년 부스트 장학금 (학점 3.0 이상)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=20)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/naver",
-                    "collected_at": now.isoformat()
+                    "source": "https://connect.or.kr/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "specific",
+                    "major_target": "컴퓨터공학과, 소프트웨어, IT",
+                    "gpa_min": 3.0,
+                    "benefit_amount": "3000000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[우아한형제들] 우아한 청년 지원 장학금 (소득분위 무관)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=7)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/woowa",
-                    "collected_at": now.isoformat()
+                    "source": "https://www.woowahan.com/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "any",
+                    "gpa_min": 0.0,
+                    "income_max": 10,
+                    "benefit_amount": "1500000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[토스] 2026 NEXT 금융/테크 장학생 선발 (전국 대학생)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=30)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/toss",
-                    "collected_at": now.isoformat()
+                    "source": "https://toss.im/career",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "specific",
+                    "major_target": "경영학과, 경제학과, 컴퓨터공학과",
+                    "gpa_min": 3.5,
+                    "benefit_amount": "5000000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[당근마켓] 로컬 크리에이터 대학생 활동 장학금 (지역 무관)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=10)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/daangn",
-                    "collected_at": now.isoformat()
+                    "source": "https://www.daangn.com/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "any",
+                    "gpa_min": 2.5,
+                    "benefit_amount": "1000000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[쿠팡] 쿠팡 로켓 인재 장학생 선발 (전공 무관)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=15)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/coupang",
-                    "collected_at": now.isoformat()
+                    "source": "https://www.coupang.com/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "any",
+                    "gpa_min": 3.0,
+                    "benefit_amount": "2000000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[아산나눔재단] 2026 청년 창업가/인재 지원 장학금",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=25)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/asan",
-                    "collected_at": now.isoformat()
+                    "source": "https://asan-nanum.org/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "specific",
+                    "major_target": "창업, 경영학과",
+                    "gpa_min": 0.0,
+                    "benefit_amount": "3500000"
                 },
                 {
                     "category": "민간 장학금",
                     "title": "[미래에셋박현주재단] 제32기 국내 우수 인재 장학생 (학점 3.5 이상)",
                     "period": f"{now.strftime('%Y.%m.%d')} ~ {(now + timedelta(days=5)).strftime('%Y.%m.%d')}",
                     "status": "신청중",
-                    "source": "https://www.campuspick.com/scholarship/miraeasset",
-                    "collected_at": now.isoformat()
+                    "source": "https://foundation.miraeasset.com/",
+                    "collected_at": now.isoformat(),
+                    "major_rule": "any",
+                    "gpa_min": 3.5,
+                    "benefit_amount": "4000000"
                 }
             ]
             

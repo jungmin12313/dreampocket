@@ -6,6 +6,7 @@ from scrapers.gwangju_scraper import GwangjuScraper
 from scrapers.regional_aggregator import RegionalAggregatorScraper
 from scrapers.campuspick_scraper import CampusPickScraper
 from scrapers.universal_scraper import UniversalScraper
+from scrapers.mega_scraper import MegaScraper
 from core.document_analyzer import analyzer
 from core.auto_applier import applier
 from core.link_validator import validator
@@ -69,6 +70,14 @@ async def refresh_scholarship_data():
         results.extend(campuspick_results)
     except Exception as e:
         print(f"Error running CampusPickScraper: {e}")
+        
+    # 7. Run Mega Scraper (AI Bypass Hardcoded Megas)
+    try:
+        mega = MegaScraper()
+        mega_results = await mega.scrape()
+        results.extend(mega_results)
+    except Exception as e:
+        print(f"Error running MegaScraper: {e}")
         
     # Apply loan keywords filter at collection time
     LOAN_KEYWORDS = ['대출', '학자금대출', '생활비대출', '융자', '이자', '저금리', '금리', '상환', '보증', '담보']

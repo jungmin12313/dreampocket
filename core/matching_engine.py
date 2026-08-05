@@ -184,6 +184,10 @@ class ScholarshipBrain:
                     amount_est = int(amount_match.group(1)) * 10000
                 elif '전액' in sch['title']:
                     amount_est = 3500000
+                    
+            # Fallback to a conservative estimate if still 0
+            if amount_est == 0:
+                amount_est = 1000000
 
             item = {
                 "id": sch['id'],

@@ -28,7 +28,9 @@ class GwangjuScraper:
                 "period": "2026.05.01 ~ 2026.05.31",
                 "status": "신청중",
                 "source": "http://www.bitgoeul.gwangju.go.kr",
-                "collected_at": datetime.now()
+                "collected_at": datetime.now(),
+                "region_rule": "local",
+                "region_target": "광주"
             },
             {
                 "category": "지자체 장학금",
@@ -36,7 +38,9 @@ class GwangjuScraper:
                 "period": "2026.06.01 ~ 2026.06.25",
                 "status": "대기중",
                 "source": "https://www.gie.kr/schship",
-                "collected_at": datetime.now()
+                "collected_at": datetime.now(),
+                "region_rule": "local",
+                "region_target": "광주"
             },
             {
                 "category": "지자체 장학금",
@@ -44,7 +48,9 @@ class GwangjuScraper:
                 "period": "2026.05.10 ~ 2026.05.30",
                 "status": "신청중",
                 "source": "http://www.bitgoeul.gwangju.go.kr/notice",
-                "collected_at": datetime.now()
+                "collected_at": datetime.now(),
+                "region_rule": "local",
+                "region_target": "광주"
             }
         ]
         

@@ -22,7 +22,8 @@ class ScholarshipDB:
         else:
             print("[DB] Initializing SQLite Connection...")
             self.db_name = db_name
-            self.conn = sqlite3.connect(self.db_name, check_same_thread=False)
+            self.conn = sqlite3.connect(self.db_name, check_same_thread=False, timeout=15)
+            self.conn.execute("PRAGMA journal_mode=WAL;")
             
         self.create_tables()
 
@@ -177,12 +178,17 @@ class ScholarshipDB:
                     self.execute_query('''
                         UPDATE scholarships SET
                             category = ?, period = ?, status = ?, source = ?, collected_at = ?,
-                            last_health_check = ?, is_closed = 0, is_loan = ?
+                            last_health_check = ?, is_closed = 0, is_loan = ?,
+                            region_rule = COALESCE(?, region_rule), region_target = COALESCE(?, region_target),
+                            major_rule = COALESCE(?, major_rule), major_target = COALESCE(?, major_target)
                         WHERE id = ?
                     ''', (
                         item.get('category'), item.get('period'), item.get('status'),
                         item.get('source'), item.get('collected_at'), datetime.now(),
-                        item.get('is_loan', 0), scholarship_id
+                        item.get('is_loan', 0),
+                        item.get('region_rule'), item.get('region_target'),
+                        item.get('major_rule'), item.get('major_target'),
+                        scholarship_id
                     ), commit=True)
                 else:
                     self.execute_query('''
@@ -190,9 +196,10 @@ class ScholarshipDB:
                             category, title, period, status, source, collected_at,
                             gpa_limit, income_limit, is_verified, analysis_status, last_health_check,
                             major_restriction, region_restriction, benefit_type, benefit_amount, 
-                            application_link, is_closed, is_loan
+                            application_link, is_closed, is_loan,
+                            region_rule, region_target, major_rule, major_target
                         )
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ''', (
                         item.get('category'), item.get('title'), item.get('period'), 
                         item.get('status'), item.get('source'), item.get('collected_at'),
@@ -202,7 +209,9 @@ class ScholarshipDB:
                         item.get('major_restriction'), item.get('region_restriction'),
                         item.get('benefit_type'), item.get('benefit_amount'),
                         item.get('application_link'), item.get('is_closed', 0),
-                        item.get('is_loan', 0)
+                        item.get('is_loan', 0),
+                        item.get('region_rule', 'nationwide'), item.get('region_target'),
+                        item.get('major_rule', 'any'), item.get('major_target')
                     ), commit=True)
             except Exception as e:
                 print(f"Error saving scholarship: {e}")

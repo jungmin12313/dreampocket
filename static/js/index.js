@@ -696,12 +696,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             ${amtDisplay}
                             ${metadataHtml}
                         </div>
-                        <div class="card-action">
+                        <div class="card-action" style="display: flex; gap: 8px;">
                             ${linkWarningHtml}
-                            <a href="${sch.link}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+                            <a href="${sch.link}" target="_blank" rel="noopener noreferrer" class="apply-btn" style="flex: 1; text-align: center;">
                                 <span>공식 공고 바로가기</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
+                            <button type="button" class="apply-btn btn-ai-check" onclick="openAiCheckModal(${sch.id}, '${sch.title.replace(/'/g, "\\'")}')" style="flex: 1; background: linear-gradient(135deg, #a855f7, #6366f1); border: none; padding: 12px; color: #fff; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                                <i class="fa-solid fa-robot"></i> AI 자격 검증
+                            </button>
         </div>
                     </div>
                 `;
